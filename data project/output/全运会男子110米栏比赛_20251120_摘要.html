@@ -1,0 +1,493 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主题摘要页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .summary-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            line-height: 1.8;
+        }
+        
+        .entity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .entity-category {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 3px solid #667eea;
+        }
+        
+        .entity-category h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .entity-list {
+            list-style: none;
+        }
+        
+        .entity-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .entity-name {
+            font-weight: 500;
+        }
+        
+        .entity-count {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #667eea;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #667eea;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-event {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .article-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 3px solid #667eea;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .article-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .article-meta {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .article-source {
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .article-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .article-link:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+            margin: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📰 主题摘要页面</h1>
+            <p class="subtitle">自动生成的新闻汇总与分析</p>
+            <p class="subtitle">生成时间: 2025-11-20 13:28:18</p>
+        </div>
+        
+        <div class="content">
+            <!-- 统计信息 -->
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">文章总数</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">关键实体</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">时间节点</div>
+                </div>
+            </div>
+            
+            <!-- 主要摘要 -->
+            <div class="section">
+                <h2 class="section-title">📋 主要摘要</h2>
+                <div class="summary-box">
+                    在2025年11月19日于广州举行的第十五届全运会男子110米栏决赛中，上海队选手徐卓一以13秒12的个人最好成绩夺得金牌，这一成绩也创下本赛季全国最佳纪录。江苏选手刘俊茜以0.02秒之差获得银牌，同样刷新个人最佳。此次胜利标志着上海队在该项目上实现了自1993年第七届全运会以来的九连冠，延续了长达32年的跨栏优势传统。
+
+关键人物方面，徐卓一作为新一代“眼镜飞人”，在预赛和决赛中均表现突出。其他参赛选手如亚洲青年纪录保持者陈圆将、刘俊茜和秦伟搏也展现了竞争力。历史背景上，男子110米栏的世界纪录由梅里特于2012年创造（12秒80），而亚洲和全国纪录仍由刘翔在2006年刷新的12秒88保持。
+
+本届全运会田径赛场其他亮点包括：浙江队16岁小将陈妤颉在女子100米和200米项目中双双夺冠，以及广东队刘景扬赢得女子100米栏金牌。赛事整体体现了中国田径新老选手的交替与竞技水平的持续提升，同时突出了上海在跨栏项目上的深厚传承与团队实力。
+                </div>
+            </div>
+            
+            <!-- 关键实体 -->
+            <div class="section">
+                <h2 class="section-title">👥 关键实体</h2>
+                <div class="entity-grid">
+                    
+                    <div class="entity-category">
+                        <h3>👤 人物</h3>
+                        <ul class="entity-list">
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">徐卓一</span>
+                                <span class="entity-count">6</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">刘俊茜</span>
+                                <span class="entity-count">3</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">梅里特</span>
+                                <span class="entity-count">2</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">刘翔</span>
+                                <span class="entity-count">2</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">陈妤颉</span>
+                                <span class="entity-count">2</span>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    
+                    
+                    
+                    <div class="entity-category">
+                        <h3>🏢 组织</h3>
+                        <ul class="entity-list">
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">上海队</span>
+                                <span class="entity-count">5</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">全运会</span>
+                                <span class="entity-count">4</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">第十五届全国运动会</span>
+                                <span class="entity-count">2</span>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    
+                    
+                    
+                    <div class="entity-category">
+                        <h3>📍 地点</h3>
+                        <ul class="entity-list">
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">上海</span>
+                                <span class="entity-count">3</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">广州</span>
+                                <span class="entity-count">2</span>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- 时间线 -->
+            <div class="section">
+                <h2 class="section-title">📅 事件时间线</h2>
+                <div class="timeline">
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025-11-19</div>
+                        <div class="timeline-event">
+                            <strong>徐卓一13秒12封王 上海实现全运会男子110米栏九连冠</strong>
+                            
+                            <p style="color: #666; margin-top: 5px;">（共 10 个相关事件）</p>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- 原始文章 -->
+            <div class="section">
+                <h2 class="section-title">📰 原始文章链接</h2>
+                <div class="articles-grid">
+                    
+                    <div class="article-card">
+                        <div class="article-title">徐卓一13秒12封王 上海实现全运会男子110米栏九连冠</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-19</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea6b6c2fe41eeaf0e046e1f18b21d&url=https%3a%2f%2fnews.qq.com%2frain%2fa%2f20251119A06SUH00&c=7492139395705849181&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全运会男子110米栏 眼镜飞人徐卓一刷新PB 13秒12成功摘金</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-19</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea6b6c2fe41eeaf0e046e1f18b21d&url=https%3a%2f%2fnews.qq.com%2frain%2fa%2f20251119A06OWK00&c=9367663568308105254&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全运会男子110米栏 眼镜飞人徐卓一预赛第1 陈圆将刘俊茜晋级</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-19</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea6b6c2fe41eeaf0e046e1f18b21d&url=https%3a%2f%2fwww.sohu.com%2fa%2f956463111_121968620&c=3134958785607961474&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全运会丨田径盛宴 男子110米栏决赛的跌宕起伏与新星崛起</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-19</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea6b6c2fe41eeaf0e046e1f18b21d&url=https%3a%2f%2fwww.sohu.com%2fa%2f956308189_121924582&c=405529541803723404&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全运会九连冠统治赛场 这是上海跨栏的荣耀传承</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-19</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea6b6c2fe41eeaf0e046e1f18b21d&url=https%3a%2f%2ffinance.sina.com.cn%2fjjxw%2f2025-11-20%2fdoc-infxzkva3841202.shtml&c=13712683995219744697&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全运会 田径 男子110米栏决赛 徐卓一夺冠</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-19</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea6b6c2fe41eeaf0e046e1f18b21d&url=https%3a%2f%2fwww.xinhuanet.com%2fsports%2f20251119%2f99ad9a8529b04805a829ed821f6d25d7%2fc.html&c=11004702874355768702&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">粤港澳全运会 综合消息 田径赛场日产9金 乒乓球女团金牌归属山东</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-19</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea6b6c2fe41eeaf0e046e1f18b21d&url=https%3a%2f%2ffinance.sina.com.cn%2froll%2f2025-11-20%2fdoc-infxyiis2822535.shtml&c=8830112565576893807&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">徐卓一13秒12夺金 上海蝉联9届全运会110米栏冠军</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-19</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea6b6c2fe41eeaf0e046e1f18b21d&url=https%3a%2f%2fwww.msn.cn%2fzh-cn%2fsports%2fother%2f%25E5%25BE%2590%25E5%258D%2593%25E4%25B8%258013%25E7%25A7%259212%25E5%25A4%25BA%25E9%2587%2591-%25E4%25B8%258A%25E6%25B5%25B7%25E8%259D%2589%25E8%2581%25949%25E5%25B1%258A%25E5%2585%25A8%25E8%25BF%2590%25E4%25BC%259A110%25E7%25B1%25B3%25E6%25A0%258F%25E5%2586%25A0%25E5%2586%259B%2far-AA1QMlpu&c=8165581678643326632&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">跨栏比赛中 为什么男子是110米栏 而女子是100米栏</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-19</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea6b6c2fe41eeaf0e046e1f18b21d&url=https%3a%2f%2fwww.msn.cn%2fzh-cn%2fsports%2f%25E7%2594%25B0%25E5%25BE%2584%2f%25E8%25B7%25A8%25E6%25A0%258F%25E6%25AF%2594%25E8%25B5%259B%25E4%25B8%25AD-%25E4%25B8%25BA%25E4%25BB%2580%25E4%25B9%2588%25E7%2594%25B7%25E5%25AD%2590%25E6%2598%25AF110%25E7%25B1%25B3%25E6%25A0%258F-%25E8%2580%258C%25E5%25A5%25B3%25E5%25AD%2590%25E6%2598%25AF100%25E7%25B1%25B3%25E6%25A0%258F%2far-AA1QM5b5&c=9992469024152094636&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全运会 田径综合 陈妤颉创近六届最快夺冠成绩 吴艳妮0.04秒劣势失金</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-19</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea6b6c2fe41eeaf0e046e1f18b21d&url=http%3a%2f%2fwww.gjnews.cn%2ftiyu%2f2025%2f310674.html&c=3763928174026570403&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>由自动化主题摘要系统生成 | © 2025</p>
+        </div>
+    </div>
+</body>
+</html>
+        

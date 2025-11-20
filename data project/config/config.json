@@ -1,0 +1,49 @@
+{
+  "scraper": {
+    "news_sources": [
+      {
+        "name": "BBC News",
+        "url": "https://www.bbc.com/news",
+        "enabled": true
+      },
+      {
+        "name": "CNN",
+        "url": "https://www.cnn.com",
+        "enabled": true
+      },
+      {
+        "name": "Reuters",
+        "url": "https://www.reuters.com",
+        "enabled": true
+      }
+    ],
+    "max_articles_per_source": 20,
+    "request_timeout": 10,
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+  },
+  "deduplication": {
+    "similarity_threshold": 0.85,
+    "method": "cosine"
+  },
+  "entity_extraction": {
+    "spacy_model": "en_core_web_sm",
+    "min_entity_frequency": 2,
+    "use_llm": true
+  },
+  "topic_search": {
+    "use_intelligent_finder": false,
+    "use_traditional_search": true
+  },
+  "summarization": {
+    "llm_provider": "deepseek",
+    "model": "deepseek-chat",
+    "max_tokens": 1000,
+    "temperature": 0.7,
+    "base_url": "https://api.deepseek.com"
+  },
+  "output": {
+    "html_file": "output/topic_summary.html",
+    "data_dir": "data",
+    "temp_dir": "temp"
+  }
+}

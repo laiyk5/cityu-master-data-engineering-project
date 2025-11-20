@@ -1,0 +1,667 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主题摘要页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .summary-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            line-height: 1.8;
+        }
+        
+        .entity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .entity-category {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 3px solid #667eea;
+        }
+        
+        .entity-category h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .entity-list {
+            list-style: none;
+        }
+        
+        .entity-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .entity-name {
+            font-weight: 500;
+        }
+        
+        .entity-count {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #667eea;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #667eea;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-event {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .article-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 3px solid #667eea;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .article-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .article-meta {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .article-source {
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .article-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .article-link:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+            margin: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📰 主题摘要页面</h1>
+            <p class="subtitle">自动生成的新闻汇总与分析</p>
+            <p class="subtitle">生成时间: 2025-11-20 13:35:19</p>
+        </div>
+        
+        <div class="content">
+            <!-- 统计信息 -->
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-number">72</div>
+                    <div class="stat-label">文章总数</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">50</div>
+                    <div class="stat-label">关键实体</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">时间节点</div>
+                </div>
+            </div>
+            
+            <!-- 主要摘要 -->
+            <div class="section">
+                <h2 class="section-title">📋 主要摘要</h2>
+                <div class="summary-box">
+                    第十五届全国运动会（粤港澳全运会）作为国内最高规格的综合性体育赛事，篮球项目备受关注，尤其是三人篮球、U22和U18等组别。本届全运会篮球赛事的主要发展包括：三人篮球决赛阶段在澳门和广州举行，广东队包揽群众比赛三人篮球项目冠军，山东三人男篮队表现突出，队长秦绪阳在比赛中贡献关键绝杀，帮助球队取得历史性成绩。同时，四川篮球队尽管投入大量资源引进周琦、胡金秋等明星球员，却未能实现夺金目标，引发讨论。
+
+关键人物方面，广东女队主教练肖海亮作为前亚运会冠军，以教练身份指导球队；江西籍球员张陈治锋代表辽宁队出战，个人表现亮眼；霹雳舞女子组比赛中，奥运选手刘清漪夺得金牌。此外，媒体报道指出，央视对全运会篮球赛事的直播覆盖有限，仅选择性转播部分焦点场次，U22、U18及三人篮球赛事缺乏直播渠道，引发球迷呼吁扩大直播范围，以更好地满足广大篮球爱好者的观赛需求。整体上，全运会篮球赛事在竞技水平、组织安排及媒体覆盖方面均成为公众关注焦点。
+                </div>
+            </div>
+            
+            <!-- 关键实体 -->
+            <div class="section">
+                <h2 class="section-title">👥 关键实体</h2>
+                <div class="entity-grid">
+                    
+                    <div class="entity-category">
+                        <h3>👤 人物</h3>
+                        <ul class="entity-list">
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">秦绪阳</span>
+                                <span class="entity-count">3</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">刘杨</span>
+                                <span class="entity-count">2</span>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    
+                    
+                    
+                    <div class="entity-category">
+                        <h3>🏢 组织</h3>
+                        <ul class="entity-list">
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">全运会</span>
+                                <span class="entity-count">16</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">山东队</span>
+                                <span class="entity-count">14</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">广东队</span>
+                                <span class="entity-count">14</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">北京队</span>
+                                <span class="entity-count">13</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">浙江队</span>
+                                <span class="entity-count">10</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">上海队</span>
+                                <span class="entity-count">9</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">江苏队</span>
+                                <span class="entity-count">7</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">四川队</span>
+                                <span class="entity-count">7</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">第十五届全国运动会</span>
+                                <span class="entity-count">6</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">辽宁队</span>
+                                <span class="entity-count">6</span>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    
+                    
+                    
+                    <div class="entity-category">
+                        <h3>📍 地点</h3>
+                        <ul class="entity-list">
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">澳门</span>
+                                <span class="entity-count">26</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">山东</span>
+                                <span class="entity-count">8</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">香港</span>
+                                <span class="entity-count">8</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">北京</span>
+                                <span class="entity-count">7</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">粤港澳</span>
+                                <span class="entity-count">6</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">江西</span>
+                                <span class="entity-count">6</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">广州</span>
+                                <span class="entity-count">6</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">辽宁</span>
+                                <span class="entity-count">5</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">上海</span>
+                                <span class="entity-count">5</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">广东</span>
+                                <span class="entity-count">5</span>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- 时间线 -->
+            <div class="section">
+                <h2 class="section-title">📅 事件时间线</h2>
+                <div class="timeline">
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025-11-05</div>
+                        <div class="timeline-event">
+                            <strong>强烈呼吁 全运会篮球比赛央视不直播场次理应开放直播</strong>
+                            
+                            <p style="color: #666; margin-top: 5px;">（共 2 个相关事件）</p>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025-11-11</div>
+                        <div class="timeline-event">
+                            <strong>粤港澳全运会 篮球项目男子成年组半决赛比赛间隙 小朋友表演 莞小鹅</strong>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025-11-13</div>
+                        <div class="timeline-event">
+                            <strong>粤港澳全运会 三人篮球决赛阶段比赛在澳门打响</strong>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025-11-20</div>
+                        <div class="timeline-event">
+                            <strong>原创 江西出生的篮球天才 代表辽宁出战全运会 狂砍27分23篮板5盖帽</strong>
+                            
+                            <p style="color: #666; margin-top: 5px;">（共 68 个相关事件）</p>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- 原始文章 -->
+            <div class="section">
+                <h2 class="section-title">📰 原始文章链接</h2>
+                <div class="articles-grid">
+                    
+                    <div class="article-card">
+                        <div class="article-title">强烈呼吁 全运会篮球比赛央视不直播场次理应开放直播</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-05</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea7ad72174c0f8b3bd3258b6a8332&url=https%3a%2f%2fnews.qq.com%2frain%2fa%2f20251105A05XLS00&c=6829422306973911501&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">粤港澳全运会 三人篮球决赛阶段比赛在澳门打响</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-13</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea7ad72174c0f8b3bd3258b6a8332&url=https%3a%2f%2fwww.chinanews.com.cn%2fty%2f2025%2f11-12%2f10514614.shtml&c=10956580394918205688&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">原创 强烈呼吁 全运会篮球比赛不直播场次理应开放直播</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-05</span>
+                        </div>
+                        <a href="http://www.bing.com/news/apiclick.aspx?ref=FexRss&aid=&tid=691ea7ad72174c0f8b3bd3258b6a8332&url=https%3a%2f%2fwww.sohu.com%2fa%2f951348863_122342620&c=9713206316563897293&mkt=zh-hk" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">原创 江西出生的篮球天才 代表辽宁出战全运会 狂砍27分23篮板5盖帽</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/956452919_121975430" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">四川篮球豪赌全运会双双失利 宫鲁鸣一语道破真相 王思雨表情尽显无奈</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/956456118_121628686" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">粤港澳全运会 广东队包揽十五运会群众比赛三人篮球项目冠军</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://finance.sina.com.cn/roll/2025-11-18/doc-infxuwrh4161979.shtml" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全运会女篮完整赛程出炉 大部分球队5天内打3场小组赛</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://sports.sina.com.cn/basketball/nba/2025-10-15/doc-inftxywq2061298.shtml" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">粤港澳全运会 霹雳舞女子组比赛奥运选手刘清漪夺冠</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://news.qq.com/rain/a/20251119A01OSV00" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全国第五 山东三人男篮创造历史 RBA东港 双星 闪耀全运会</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/956396681_122387568" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">RBA东港篮球队全国第五 秦绪阳绝杀北京队闪耀全运会</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/956396282_121885030" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全国第五 RBA东港 双星 闪耀全运会</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/956396921_122001006" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">原创 1分钟4人遭驱逐 全运会篮球赛场风波 江苏队无人可用被判负 裁判成焦点</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/954495493_122367881" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">杨鸣所言不虚 全运会辽宁篮球被广东压制 U18比赛暴露青训差距</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/956023551_122442987" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全运会重罚 江苏男篮四人停赛一个月 裁判权威不该挑战</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/956037878_121987090" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">原创 同样是篮球赛事 为什么全运会票价更亲民</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/956131161_122368348" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全运会篮球 山东队逆转浙江队 成功晋级决赛</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/955436501_122001006" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全运会U22男篮山东队击败北京队惊险晋级决赛</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/956299420_122387568" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全运会 篮球 男子18岁以下组四分之一决赛 上海队胜北京队 王青山表现抢眼引领胜利</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/955066820_121924582" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">全运会女篮大冷 广东团队篮球碾压四川800万豪阵 杨舒予爆发</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/955338702_121976701" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">官宣 2025湖北百强县篮球联赛延期 全运会影响几何</div>
+                        <div class="article-meta">
+                            <span class="article-source">Bing News</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="https://www.sohu.com/a/953984575_121976701" target="_blank" class="article-link">阅读原文 →</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>由自动化主题摘要系统生成 | © 2025</p>
+        </div>
+    </div>
+</body>
+</html>
+        

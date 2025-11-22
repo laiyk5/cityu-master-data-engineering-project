@@ -17,9 +17,11 @@
 
 ## 🚀 快速开始（3步）
 
+[安装UV](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer)
+
 ```bash
 # 1. 安装依赖
-pip install -r requirements.txt
+uv sync
 
 # 2. 配置 API（复制并编辑 .env）
 Copy-Item config/.env.example .env
@@ -102,7 +104,7 @@ data-project/
 ### 1. 安装依赖
 
 ```bash
-pip install -r requirements.txt
+uv venv & uv sync
 ```
 
 ### 2. 配置环境

@@ -1,0 +1,35 @@
+# Byte-code files
+*.pyc
+__pycache__/
+*.pyd
+*.pyo
+*.egg-info/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.bak
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+*.egg
+*.whl
+
+# Log files
+*.log
+
+# Sensitive information (e.g., API keys, passwords)
+config.ini
+.env

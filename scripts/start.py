@@ -88,7 +88,7 @@ def run_full_pipeline():
     print("=" * 70 + "\n")
     
     import subprocess
-    result = subprocess.run(['python', 'main.py'], 
+    result = subprocess.run(['python', 'scripts/main.py'], 
                           capture_output=False, 
                           text=True)
     
@@ -105,7 +105,7 @@ def run_topic_search():
     print("=" * 70 + "\n")
     
     import subprocess
-    subprocess.run(['python', 'topic_search.py'])
+    subprocess.run(['python', 'scripts/topic_search.py'])
 
 def test_deepseek():
     """测试 DeepSeek API"""
@@ -114,7 +114,7 @@ def test_deepseek():
     print("=" * 70 + "\n")
     
     import subprocess
-    subprocess.run(['python', 'test_deepseek.py'])
+    subprocess.run(['python', 'scripts/test_deepseek.py'])
 
 def init_database():
     """初始化数据库"""
@@ -123,7 +123,7 @@ def init_database():
     print("=" * 70 + "\n")
     
     import subprocess
-    subprocess.run(['python', 'init_database.py'])
+    subprocess.run(['python', 'scripts/init_database.py'])
 
 def view_database():
     """查看数据库数据"""
@@ -132,7 +132,7 @@ def view_database():
     print("=" * 70 + "\n")
     
     import subprocess
-    subprocess.run(['python', 'db_utils.py'])
+    subprocess.run(['python', 'scripts/db_utils.py'])
 
 def view_docs():
     """查看文档索引"""

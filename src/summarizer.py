@@ -78,21 +78,22 @@ class Summarizer:
                 for article in articles[:10]  # 限制文章数量
             ])
             
-            prompt = f"""请基于以下新闻文章，生成一个全面的主题摘要。摘要应该：
-1. 涵盖主要事件和发展
-2. 突出关键人物和组织
-3. 保持客观和中立
-4. 长度约200-300字
+            prompt = f"""Based on the following news articles, generate a comprehensive topic summary. The summary should:
+1. Cover major events and developments
+2. Highlight key people and organizations
+3. Maintain objectivity and neutrality
+4. Be approximately 200-300 words in length
+5. Be written in English
 
-文章内容：
+Article content:
 {articles_text}
 
-请生成摘要："""
+Please generate the summary in English:"""
             
             response = self.client.chat.completions.create(
                 model=self.summary_config['model'],
                 messages=[
-                    {"role": "system", "content": "你是一个专业的新闻摘要生成助手。"},
+                    {"role": "system", "content": "You are a professional news summary generation assistant. Always respond in English."},
                     {"role": "user", "content": prompt}
                 ],
                 max_tokens=self.summary_config['max_tokens'],
@@ -119,21 +120,22 @@ class Summarizer:
                 for article in articles[:10]  # 限制文章数量
             ])
             
-            prompt = f"""请基于以下新闻文章，生成一个全面的主题摘要。摘要应该：
-1. 涵盖主要事件和发展
-2. 突出关键人物和组织
-3. 保持客观和中立
-4. 长度约200-300字
+            prompt = f"""Based on the following news articles, generate a comprehensive topic summary. The summary should:
+1. Cover major events and developments
+2. Highlight key people and organizations
+3. Maintain objectivity and neutrality
+4. Be approximately 200-300 words in length
+5. Be written in English
 
-文章内容：
+Article content:
 {articles_text}
 
-请生成摘要："""
+Please generate the summary in English:"""
             
             response = self.client.chat.completions.create(
                 model=self.summary_config['model'],
                 messages=[
-                    {"role": "system", "content": "你是一个专业的新闻摘要生成助手。"},
+                    {"role": "system", "content": "You are a professional news summary generation assistant. Always respond in English."},
                     {"role": "user", "content": prompt}
                 ],
                 max_tokens=self.summary_config['max_tokens'],
@@ -158,16 +160,17 @@ class Summarizer:
                 for article in articles[:10]
             ])
             
-            prompt = f"""请基于以下新闻文章，生成一个全面的主题摘要。摘要应该：
-1. 涵盖主要事件和发展
-2. 突出关键人物和组织
-3. 保持客观和中立
-4. 长度约200-300字
+            prompt = f"""Based on the following news articles, generate a comprehensive topic summary. The summary should:
+1. Cover major events and developments
+2. Highlight key people and organizations
+3. Maintain objectivity and neutrality
+4. Be approximately 200-300 words in length
+5. Be written in English
 
-文章内容：
+Article content:
 {articles_text}
 
-请生成摘要："""
+Please generate the summary in English:"""
             
             message = self.client.messages.create(
                 model=self.summary_config['model'],
@@ -191,8 +194,8 @@ class Summarizer:
         # 提取所有标题
         titles = [article.get('title', '') for article in articles[:10]]
         
-        # 生成简单摘要
-        summary = "本次主题涵盖以下主要新闻：\n\n"
+        # Generate simple summary
+        summary = "This topic covers the following main news articles:\n\n"
         summary += "\n".join([f"• {title}" for title in titles if title])
         
         return summary

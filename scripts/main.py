@@ -10,10 +10,10 @@ from datetime import datetime
 import sys
 
 # 添加 src 目录到路径
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src'))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src')) # ../../src
 
 # 配置日志
-log_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'logs')
+log_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'logs')  # ../../logs
 os.makedirs(log_dir, exist_ok=True)
 
 # 配置文件处理器（UTF-8编码）
@@ -44,10 +44,10 @@ logger = logging.getLogger(__name__)
 class Pipeline:
     """主管道类"""
     
-    def __init__(self, config_path: str = None):
+    def __init__(self, config_path: str | None = None):
         """初始化管道"""
         if config_path is None:
-            config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config.json')
+            config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config.json') # ../../config/config.json
         self.config_path = config_path
         self.load_config()
         self.create_directories()

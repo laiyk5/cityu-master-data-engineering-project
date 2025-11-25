@@ -92,23 +92,23 @@ class EntityExtractor:
             # 截取文本长度
             text_sample = text[:2000]
             
-            prompt = f"""请从以下新闻文本中提取关键实体，返回JSON格式。
-要求：
-1. people: 人物名字列表（政治家、企业家、专家等）
-2. organizations: 组织机构列表（公司、政府机构、国际组织等）
-3. locations: 地点列表（国家、城市、地区等）
-4. dates: 日期列表（重要时间点）
+            prompt = f"""Extract key entities from the following news text and return in JSON format.
+Requirements:
+1. people: List of person names (politicians, entrepreneurs, experts, etc.)
+2. organizations: List of organizations (companies, government agencies, international organizations, etc.)
+3. locations: List of locations (countries, cities, regions, etc.)
+4. dates: List of dates (important time points)
 
-文本：
+Text:
 {text_sample}
 
-请直接返回JSON格式，不要其他说明：
+Please return JSON format directly without any other explanation:
 {{"people": [], "organizations": [], "locations": [], "dates": []}}"""
             
             response = self.llm_client.chat.completions.create(
                 model=self.config['summarization']['model'],
                 messages=[
-                    {"role": "system", "content": "你是一个专业的命名实体识别助手，擅长从新闻文本中提取关键实体。"},
+                    {"role": "system", "content": "You are a professional named entity recognition assistant, skilled at extracting key entities from news text."},
                     {"role": "user", "content": prompt}
                 ],
                 max_tokens=1000,
@@ -131,7 +131,7 @@ class EntityExtractor:
                 result_text = result_text.replace('```json', '').replace('```', '').strip()
             
             entities = json.loads(result_text)
-            logger.info(f"成功解析LLM返回的实体: {len(entities.get('people', []))} 人物, {len(entities.get('organizations', []))} 组织, {len(entities.get('locations', []))} 地点")
+            logger.info(f"Successfully parsed entities from LLM: {len(entities.get('people', []))} people, {len(entities.get('organizations', []))} organizations, {len(entities.get('locations', []))} locations")
             
             # 确保返回正确的格式
             return {

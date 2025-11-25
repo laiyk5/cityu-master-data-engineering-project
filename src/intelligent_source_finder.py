@@ -46,32 +46,32 @@ class IntelligentSourceFinder:
         Returns:
             新闻源列表，每个源包含 name, url, description
         """
-        prompt = f"""请为主题"{topic}"推荐{max_sources}个最相关的新闻网站来源。
+        prompt = f"""Please recommend {max_sources} most relevant news website sources for the topic "{topic}".
 
-要求：
-1. 推荐权威、可信的新闻媒体网站
-2. 网站应该经常报道与"{topic}"相关的内容
-3. 包含国内外主流媒体
-4. 每个网站包含：名称、网址、简短描述
+Requirements:
+1. Recommend authoritative and credible news media websites
+2. Websites should frequently cover content related to "{topic}"
+3. Include both domestic and international mainstream media
+4. Each website should include: name, URL, brief description
 
-请直接返回JSON格式，格式如下：
+Please return JSON format directly as follows:
 {{
   "sources": [
     {{
-      "name": "网站名称",
-      "url": "完整网址（https://开头）",
-      "description": "为什么这个网站适合此主题（20字内）"
+      "name": "Website name",
+      "url": "Complete URL (starting with https://)",
+      "description": "Why this website is suitable for this topic (within 50 characters)"
     }}
   ]
 }}
 
-只返回JSON，不要其他解释。"""
+Return only JSON, no other explanation."""
 
         try:
             response = self.client.chat.completions.create(
                 model="deepseek-chat",
                 messages=[
-                    {"role": "system", "content": "你是一个专业的新闻媒体推荐专家，擅长根据主题推荐最相关的新闻来源。"},
+                    {"role": "system", "content": "You are a professional news media recommendation expert, skilled at recommending the most relevant news sources based on topics."},
                     {"role": "user", "content": prompt}
                 ],
                 max_tokens=1500,
@@ -107,34 +107,34 @@ class IntelligentSourceFinder:
         Returns:
             推荐的文章URL列表
         """
-        source_info = f"来自{source_name}网站的" if source_name else ""
+        source_info = f"from {source_name} website " if source_name else ""
         
-        prompt = f"""请推荐{max_urls}个关于"{topic}"主题的{source_info}新闻文章URL。
+        prompt = f"""Please recommend {max_urls} news article URLs {source_info}about the topic "{topic}".
 
-要求：
-1. URL必须是真实存在的新闻文章页面
-2. 文章应该与"{topic}"高度相关
-3. 优先推荐最近发布的文章
-4. URL格式正确且可访问
+Requirements:
+1. URLs must be real existing news article pages
+2. Articles should be highly relevant to "{topic}"
+3. Prioritize recently published articles
+4. URLs must be correctly formatted and accessible
 
-请直接返回JSON格式：
+Please return JSON format directly:
 {{
   "urls": [
     {{
-      "url": "完整文章URL",
-      "title": "文章标题",
-      "relevance": "相关性说明（15字内）"
+      "url": "Complete article URL",
+      "title": "Article title",
+      "relevance": "Relevance explanation (within 40 characters)"
     }}
   ]
 }}
 
-只返回JSON，不要其他解释。"""
+Return only JSON, no other explanation."""
 
         try:
             response = self.client.chat.completions.create(
                 model="deepseek-chat",
                 messages=[
-                    {"role": "system", "content": "你是一个专业的新闻搜索专家，擅长查找相关新闻文章。"},
+                    {"role": "system", "content": "You are a professional news search expert, skilled at finding relevant news articles."},
                     {"role": "user", "content": prompt}
                 ],
                 max_tokens=1000,

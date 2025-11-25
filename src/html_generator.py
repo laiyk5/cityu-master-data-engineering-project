@@ -66,11 +66,11 @@ class HTMLGenerator:
         """生成HTML内容"""
         template_str = """
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>主题摘要页面</title>
+    <title>Topic Summary Page</title>
     <style>
         * {
             margin: 0;
@@ -316,9 +316,9 @@ class HTMLGenerator:
 <body>
     <div class="container">
         <div class="header">
-            <h1>📰 主题摘要页面</h1>
-            <p class="subtitle">自动生成的新闻汇总与分析</p>
-            <p class="subtitle">生成时间: {{ generated_time }}</p>
+            <h1>📰 Topic Summary Page</h1>
+            <p class="subtitle">Automatically Generated News Summary and Analysis</p>
+            <p class="subtitle">Generated: {{ generated_time }}</p>
         </div>
         
         <div class="content">
@@ -326,33 +326,33 @@ class HTMLGenerator:
             <div class="stats">
                 <div class="stat-box">
                     <div class="stat-number">{{ article_count }}</div>
-                    <div class="stat-label">文章总数</div>
+                    <div class="stat-label">Total Articles</div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-number">{{ entity_count }}</div>
-                    <div class="stat-label">关键实体</div>
+                    <div class="stat-label">Key Entities</div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-number">{{ timeline_count }}</div>
-                    <div class="stat-label">时间节点</div>
+                    <div class="stat-label">Timeline Events</div>
                 </div>
             </div>
             
-            <!-- 主要摘要 -->
+            <!-- Main Summary -->
             <div class="section">
-                <h2 class="section-title">📋 主要摘要</h2>
+                <h2 class="section-title">📋 Main Summary</h2>
                 <div class="summary-box">
                     {{ summary_text }}
                 </div>
             </div>
             
-            <!-- 关键实体 -->
+            <!-- Key Entities -->
             <div class="section">
-                <h2 class="section-title">👥 关键实体</h2>
+                <h2 class="section-title">👥 Key Entities</h2>
                 <div class="entity-grid">
                     {% if entities.people %}
                     <div class="entity-category">
-                        <h3>👤 人物</h3>
+                        <h3>👤 People</h3>
                         <ul class="entity-list">
                             {% for entity in entities.people[:10] %}
                             <li class="entity-item">
@@ -366,7 +366,7 @@ class HTMLGenerator:
                     
                     {% if entities.organizations %}
                     <div class="entity-category">
-                        <h3>🏢 组织</h3>
+                        <h3>🏢 Organizations</h3>
                         <ul class="entity-list">
                             {% for entity in entities.organizations[:10] %}
                             <li class="entity-item">
@@ -380,7 +380,7 @@ class HTMLGenerator:
                     
                     {% if entities.locations %}
                     <div class="entity-category">
-                        <h3>📍 地点</h3>
+                        <h3>📍 Locations</h3>
                         <ul class="entity-list">
                             {% for entity in entities.locations[:10] %}
                             <li class="entity-item">
@@ -394,9 +394,9 @@ class HTMLGenerator:
                 </div>
             </div>
             
-            <!-- 时间线 -->
+            <!-- Timeline -->
             <div class="section">
-                <h2 class="section-title">📅 事件时间线</h2>
+                <h2 class="section-title">📅 Event Timeline</h2>
                 <div class="timeline">
                     {% for item in timeline[:10] %}
                     <div class="timeline-item">
@@ -404,7 +404,7 @@ class HTMLGenerator:
                         <div class="timeline-event">
                             <strong>{{ item.main_event }}</strong>
                             {% if item.event_count > 1 %}
-                            <p style="color: #666; margin-top: 5px;">（共 {{ item.event_count }} 个相关事件）</p>
+                            <p style="color: #666; margin-top: 5px;">({{ item.event_count }} related events)</p>
                             {% endif %}
                         </div>
                     </div>
@@ -412,9 +412,9 @@ class HTMLGenerator:
                 </div>
             </div>
             
-            <!-- 原始文章 -->
+            <!-- Articles -->
             <div class="section">
-                <h2 class="section-title">📰 原始文章链接</h2>
+                <h2 class="section-title">📰 Source Articles</h2>
                 <div class="articles-grid">
                     {% for article in articles[:20] %}
                     <div class="article-card">
@@ -423,7 +423,7 @@ class HTMLGenerator:
                             <span class="article-source">{{ article.source }}</span> • 
                             <span>{{ article.published_date }}</span>
                         </div>
-                        <a href="{{ article.url }}" target="_blank" class="article-link">阅读原文 →</a>
+                        <a href="{{ article.url }}" target="_blank" class="article-link">Read Article →</a>
                     </div>
                     {% endfor %}
                 </div>
@@ -431,7 +431,7 @@ class HTMLGenerator:
         </div>
         
         <div class="footer">
-            <p>由自动化主题摘要系统生成 | © 2025</p>
+            <p>Generated by Automated Topic Summary System | © 2025</p>
         </div>
     </div>
 </body>
@@ -450,7 +450,7 @@ class HTMLGenerator:
                 len(data.get('entities', {}).get('entities', {}).get('locations', []))
             ]),
             'timeline_count': len(data.get('timeline', {}).get('timeline', [])),
-            'summary_text': data.get('summary', {}).get('summary', '暂无摘要'),
+            'summary_text': data.get('summary', {}).get('summary', 'No summary available'),
             'entities': data.get('entities', {}).get('entities', {}),
             'timeline': data.get('timeline', {}).get('timeline', []),
             'articles': data.get('articles', [])
@@ -467,7 +467,7 @@ class HTMLGenerator:
             # 清理主题名称，只保留安全字符
             safe_topic = "".join(c for c in topic_name if c.isalnum() or c in (' ', '-', '_', '（', '）', '(', ')'))
             safe_topic = safe_topic.strip().replace(' ', '_')
-            output_file = os.path.join(output_dir, f"{safe_topic}_摘要.html")
+            output_file = os.path.join(output_dir, f"{safe_topic}_summary.html")
         else:
             output_file = self.output_path
         

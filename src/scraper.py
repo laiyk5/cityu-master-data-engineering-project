@@ -209,7 +209,7 @@ class MyNewsScraper:
             logger.warning("数据库未启用，跳过数据库保存")
             return 0
         
-        return self.article_storage.insert_articles_batch(articles)
+        return self.article_storage.save_articles(articles)
     
     def save_articles(self, articles: List[Dict]):
         """保存文章（同时保存到文件和数据库）"""

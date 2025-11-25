@@ -210,6 +210,16 @@ class ArticleStorage:
             )
             print("✓ 索引 idx_articles_created_at 创建成功")
 
+            # 在移除html标签的content和title上创建全文搜索索引
+            cursor.execute(
+                """
+                CREATE INDEX IF NOT EXISTS idx_articles_fulltext 
+                ON articles USING GIN (
+                    to_tsvector('english', coalesce(title, '') || ' ' || coalesce(content, ''))
+                )
+            """
+            )
+
             conn.commit()
             cursor.close()
             NewsDatabase.close_admin_connection()
@@ -249,112 +259,118 @@ class ArticleStorage:
             self._conn.rollback()
             return False
     
-    def insert_articles_batch(self, articles: List[Dict]) -> int:
+    def save_articles(self, articles: List[Dict]) -> int:
         """批量插入文章到数据库"""
+        from tqdm import tqdm
         success_count = 0
-        for article in articles:
+        for article in tqdm(articles, desc="Saving articles"):
             if self._insert_article(article):
                 success_count += 1
         logger.info(f"成功插入 {success_count}/{len(articles)} 篇文章到数据库")
         return success_count
-
-    def get_all_articles(self, limit: int | None = None) -> List[Dict]:
-        """获取所有文章"""
-        try:
-            cursor = self._conn.cursor(cursor_factory=RealDictCursor)
-            query = """
-                SELECT id, title, content, url, source, 
-                       published_date::text as published_date, 
-                       scraped_at::text as scraped_at
-                FROM articles
-                ORDER BY published_date DESC, created_at DESC
-            """
-            if limit is not None:
-                query += f" LIMIT {limit}"
-
-            cursor.execute(query)
-            articles = cursor.fetchall()
-            cursor.close()
-            logger.info(f"从数据库获取了 {len(articles)} 篇文章")
-            return [dict(article) for article in articles]
-        except Exception as e:
-            logger.error(f"获取文章失败: {e}")
-            return []
-
-    def get_articles_by_date_range(self, days: int = 7) -> List[Dict]:
-        """获取指定天数内的文章"""
-        try:
-            cursor = self._conn.cursor(cursor_factory=RealDictCursor)
-            cursor.execute(
-                """
-                SELECT id, title, content, url, source, 
-                       published_date::text as published_date, 
-                       scraped_at::text as scraped_at
-                FROM articles
-                WHERE published_date >= CURRENT_DATE - INTERVAL '%s days'
-                ORDER BY published_date DESC
-            """,
-                (days,),
-            )
-            articles = cursor.fetchall()
-            cursor.close()
-            logger.info(f"从数据库获取了最近{days}天的 {len(articles)} 篇文章")
-            return [dict(article) for article in articles]
-        except Exception as e:
-            logger.error(f"获取文章失败: {e}")
-            return []
-
-    def get_articles_by_source(self, source: str) -> List[Dict]:
-        """根据来源获取文章"""
-        try:
-            cursor = self._conn.cursor(cursor_factory=RealDictCursor)
-            cursor.execute(
-                """
-                SELECT id, title, content, url, source, 
-                       published_date::text as published_date, 
-                       scraped_at::text as scraped_at
-                FROM articles
-                WHERE source = %s
-                ORDER BY published_date DESC
-            """,
-                (source,),
-            )
-            articles = cursor.fetchall()
-            cursor.close()
-            logger.info(f"从数据库获取了来源为 {source} 的 {len(articles)} 篇文章")
-            return [dict(article) for article in articles]
-        except Exception as e:
-            logger.error(f"获取文章失败: {e}")
-            return []
-
-    def get_article_count(self) -> int:
-        """获取文章总数"""
-        try:
-            cursor = self._conn.cursor()
-            cursor.execute("SELECT COUNT(*) FROM articles")
-            count = cursor.fetchone()[0]
-            cursor.close()
-            return count
-        except Exception as e:
-            logger.error(f"获取文章数量失败: {e}")
-            return 0
-
-    def get_sources(self) -> List[str]:
-        """获取所有新闻源"""
-        try:
-            cursor = self._conn.cursor()
-            cursor.execute("SELECT DISTINCT source FROM articles ORDER BY source")
-            sources = [row[0] for row in cursor.fetchall()]
-            cursor.close()
-            return sources
-        except Exception as e:
-            logger.error(f"获取新闻源失败: {e}")
-            return []
-
+        
     def close(self):
         """关闭数据库连接"""
         if self._conn:
             NewsDatabase.close_connection()
+
+    def search_article(self, query) -> List[Dict]:
+        """搜索文章"""
+        try:
+            cursor = self._conn.cursor(cursor_factory=RealDictCursor)
+            cursor.execute(
+                """
+                SELECT id, title, content, url, source, 
+                        published_date::text as published_date, 
+                        scraped_at::text as scraped_at
+                FROM articles
+                WHERE to_tsvector('english', coalesce(title, '') || ' ' || coalesce(content, '')) @@ plainto_tsquery('english', %s)
+                ORDER BY published_date DESC, created_at DESC
+                LIMIT 50
+            """,
+                (query,)
+            )
+            results = cursor.fetchall()
+            cursor.close()
+            logger.info(f"搜索到 {len(results)} 篇相关文章")
+            return [dict(article) for article in results]
+        except Exception as e:
+            logger.error(f"搜索文章失败: {e}")
+            return []
+
+
+def _get_articles_by_date_range(storage: ArticleStorage, days: int = 7) -> List[Dict]:
+    """获取指定天数内的文章"""
+    try:
+        cursor = storage._conn.cursor(cursor_factory=RealDictCursor)
+        cursor.execute(
+            """
+            SELECT id, title, content, url, source, 
+                    published_date::text as published_date, 
+                    scraped_at::text as scraped_at
+            FROM articles
+            WHERE published_date >= CURRENT_DATE - INTERVAL '%s days'
+            ORDER BY published_date DESC
+        """,
+            (days,),
+        )
+        articles = cursor.fetchall()
+        cursor.close()
+        logger.info(f"从数据库获取了最近{days}天的 {len(articles)} 篇文章")
+        return [dict(article) for article in articles]
+    except Exception as e:
+        logger.error(f"获取文章失败: {e}")
+        return []
+
+
+def _get_article_count(storage: ArticleStorage) -> int:
+    """获取文章总数"""
+    try:
+        cursor = storage._conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM articles")
+        count = cursor.fetchone()[0]
+        cursor.close()
+        return count
+    except Exception as e:
+        logger.error(f"获取文章数量失败: {e}")
+        return 0
+
+def _get_sources(storage: ArticleStorage) -> List[str]:
+    """获取所有新闻源"""
+    try:
+        cursor = storage._conn.cursor()
+        cursor.execute("SELECT DISTINCT source FROM articles ORDER BY source")
+        sources = [row[0] for row in cursor.fetchall()]
+        cursor.close()
+        return sources
+    except Exception as e:
+        logger.error(f"获取新闻源失败: {e}")
+        return []
+    
+
+def _get_all_articles(storage: ArticleStorage, limit: int | None = None) -> List[Dict]:
+    """获取所有文章"""
+    try:
+        cursor = storage._conn.cursor(cursor_factory=RealDictCursor)
+        query = """
+            SELECT id, title, content, url, source, 
+                    published_date::text as published_date, 
+                    scraped_at::text as scraped_at
+            FROM articles
+            ORDER BY published_date DESC, created_at DESC
+        """
+        if limit is not None:
+            query += f" LIMIT {limit}"
+
+        cursor.execute(query)
+        articles = cursor.fetchall()
+        cursor.close()
+        logger.info(f"从数据库获取了 {len(articles)} 篇文章")
+        return [dict(article) for article in articles]
+    except Exception as e:
+        logger.error(f"获取文章失败: {e}")
+        return []
+    
 
 
 if __name__ == "__main__":
@@ -364,17 +380,24 @@ if __name__ == "__main__":
     reader = ArticleStorage()
 
     # 获取文章总数
-    count = reader.get_article_count()
+    count = _get_article_count(reader)
     print(f"\n数据库中共有 {count} 篇文章")
 
     # 获取所有新闻源
-    sources = reader.get_sources()
+    sources = _get_sources(reader)
     print(f"\n新闻源: {', '.join(sources)}")
 
     # 获取最新的5篇文章
-    articles = reader.get_all_articles(limit=5)
+    articles = _get_all_articles(reader, limit=5)
     print(f"\n最新的 {len(articles)} 篇文章:")
     for i, article in enumerate(articles, 1):
+        print(f"{i}. [{article['source']}] {article['title']}")
+
+    # 测试搜索功能
+    query = "Takaichi & China"
+    search_results = reader.search_article(query)
+    print(f"\n搜索关键词 '{query}'，找到 {len(search_results)} 篇相关文章:")
+    for i, article in enumerate(search_results, 1):
         print(f"{i}. [{article['source']}] {article['title']}")
 
     reader.close()

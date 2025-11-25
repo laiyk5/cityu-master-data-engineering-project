@@ -133,7 +133,11 @@ class Pipeline:
             # scraper.save_articles(articles)
 
             from news_source import RssMetaNewsSource, MetaNewsSource, News
-            from search_engine import SimpleSearchEngine
+            from search_engine import SimpleSearchEngine, FTSSearchEngine
+            from db_utils import ArticleStorage
+
+            storage = ArticleStorage(reset=False)
+            
 
             # load opml file
             opml_config = self.config["datasource"]["rss"]["opml"]
@@ -152,19 +156,25 @@ class Pipeline:
 
             news_source = MetaNewsSource(news_sources)
 
-            search_engine = SimpleSearchEngine(news_source)
-            news = search_engine.search(self.topic)
-
-            # Save articles
-            # !NOTE: just for compatibility
-            def transform(news: News):
+            def news_to_article(news: News):
                 article = news.to_dict()
                 article["published_date"] = article.pop("published_at", "")
                 return article
             
+            # storage the news from RSS
+            storage.save_articles(list(map(lambda news: news_to_article(news), news_source.get_news())))
+
+            # search the news by topic
+            search_engine = FTSSearchEngine()
+            news = search_engine.search(self.topic)
+
+            # Save articles
+            # !NOTE: just for compatibility
+            
+            
             from scraper import MyNewsScraper
             scraper = MyNewsScraper(self.config_path, use_database=True)
-            articles = [transform(n) for n in news]
+            articles = [news_to_article(n) for n in news]
             scraper.save_articles(articles)
 
             logger.info(f"✓ 步骤1完成: 爬取了 {len(articles)} 篇文章")

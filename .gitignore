@@ -38,3 +38,4 @@ config.ini
 # project specific ignores
 data/
 logs/
+output/

@@ -73,8 +73,17 @@ class Pipeline:
         for directory in directories:
             os.makedirs(directory, exist_ok=True)
             logger.info(f"目录已创建/确认: {directory}")
+
+
+    def step0_topic_acquisition(self):
+        """Gain topic from user input"""
+
+        self.topic = input("Please enter the topic or event you want to search for: ").strip()
+
+        logger.info(f"✓ 步骤0完成: 主题已获取 - {self.topic}")
+        return True
     
-    def step1_scrape_data(self):
+    def step1_data_acquisition(self):
         """步骤1: 爬取数据"""
         logger.info("=" * 50)
         logger.info("步骤1: 开始爬取数据")
@@ -82,46 +91,82 @@ class Pipeline:
         
         scraper = None
         try:
-            # 检查是否存在 topic 搜索结果
-            import glob
-            topic_files = glob.glob(os.path.join(self.config['output']['data_dir'], 'topic_*.json'))
+            # # 检查是否存在 topic 搜索结果
+            # import glob
+            # topic_files = glob.glob(os.path.join(self.config['output']['data_dir'], 'topic_*.json'))
             
-            if topic_files:
-                # 使用最新的 topic 搜索结果
-                latest_topic_file = max(topic_files, key=os.path.getmtime)
-                logger.info(f"发现主题搜索结果: {os.path.basename(latest_topic_file)}")
-                logger.info(f"将使用该文件的数据，跳过默认源爬取")
+            # if topic_files:
+            #     # 使用最新的 topic 搜索结果
+            #     latest_topic_file = max(topic_files, key=os.path.getmtime)
+            #     logger.info(f"发现主题搜索结果: {os.path.basename(latest_topic_file)}")
+            #     logger.info(f"将使用该文件的数据，跳过默认源爬取")
                 
-                with open(latest_topic_file, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    # topic文件可能有两种格式：列表或包装对象
-                    if isinstance(data, list):
-                        articles = data
-                    elif isinstance(data, dict) and 'articles' in data:
-                        articles = data['articles']
-                    else:
-                        articles = data
+            #     with open(latest_topic_file, 'r', encoding='utf-8') as f:
+            #         data = json.load(f)
+            #         # topic文件可能有两种格式：列表或包装对象
+            #         if isinstance(data, list):
+            #             articles = data
+            #         elif isinstance(data, dict) and 'articles' in data:
+            #             articles = data['articles']
+            #         else:
+            #             articles = data
                 
-                # 保存到 raw_articles.json 供后续步骤使用
-                raw_path = os.path.join(self.config['output']['data_dir'], 'raw_articles.json')
-                with open(raw_path, 'w', encoding='utf-8') as f:
-                    json.dump(articles, f, ensure_ascii=False, indent=2)
+                # # 保存到 raw_articles.json 供后续步骤使用
+                # raw_path = os.path.join(self.config['output']['data_dir'], 'raw_articles.json')
+                # with open(raw_path, 'w', encoding='utf-8') as f:
+                #     json.dump(articles, f, ensure_ascii=False, indent=2)
                 
-                logger.info(f"✓ 步骤1完成: 使用了 {len(articles)} 篇主题搜索文章")
-                return True
+                # logger.info(f"✓ 步骤1完成: 使用了 {len(articles)} 篇主题搜索文章")
+                # return True
             
             # 如果没有 topic 文件，按原来的方式爬取
-            from scraper import NewsScraper
+            # from scraper import MyNewsScraper
             
-            scraper = NewsScraper(self.config_path, use_database=True)
-            articles = scraper.scrape_all_sources()
+            # scraper = MyNewsScraper(self.config_path, use_database=True)
+            # articles = scraper.scrape_all_sources()
             
-            if not articles:
-                logger.warning("未爬取到任何文章，使用示例数据")
-                articles = self._create_sample_data()
+            # if not articles:
+            #     logger.warning("未爬取到任何文章，使用示例数据")
+            #     articles = self._create_sample_data()
             
-            # 保存到文件和数据库
+            # # 保存到文件和数据库
+            # scraper.save_articles(articles)
+
+            from news_source import RssMetaNewsSource, MetaNewsSource, News
+            from search_engine import SimpleSearchEngine
+
+            # load opml file
+            opml_config = self.config["datasource"]["rss"]["opml"]
+            opml_paths = []
+            for c in opml_config:
+                if c["enabled"]:
+                    opml_path = c["file"]
+                    opml_paths.append(opml_path)
+            
+            news_sources = []
+            for opml_path in opml_paths:
+                with open(opml_path, 'r', encoding='utf-8') as f:
+                    opml_content = f.read()
+                news_source = RssMetaNewsSource(opml_content)
+                news_sources.append(news_source)
+
+            news_source = MetaNewsSource(news_sources)
+
+            search_engine = SimpleSearchEngine(news_source)
+            news = search_engine.search(self.topic)
+
+            # Save articles
+            # !NOTE: just for compatibility
+            def transform(news: News):
+                article = news.to_dict()
+                article["published_date"] = article.pop("published_at", "")
+                return article
+            
+            from scraper import MyNewsScraper
+            scraper = MyNewsScraper(self.config_path, use_database=True)
+            articles = [transform(n) for n in news]
             scraper.save_articles(articles)
+
             logger.info(f"✓ 步骤1完成: 爬取了 {len(articles)} 篇文章")
             return True
             
@@ -129,9 +174,9 @@ class Pipeline:
             logger.error(f"✗ 步骤1失败: {e}")
             # 创建示例数据以便继续流程
             articles = self._create_sample_data()
-            from scraper import NewsScraper
-            scraper_fallback = NewsScraper(self.config_path, use_database=False)
-            scraper_fallback.save_to_file(articles)
+            from scraper import MyNewsScraper
+            scraper_fallback = MyNewsScraper(self.config_path, use_database=False)
+            scraper_fallback._save_to_file(articles)
             logger.info("使用示例数据继续")
             return True
         finally:
@@ -265,17 +310,18 @@ class Pipeline:
         try:
             from html_generator import HTMLGenerator
             
-            # 获取主题名称（从topic文件名或摘要中提取）
-            topic_name = None
-            import glob
-            topic_files = glob.glob(os.path.join(self.config['output']['data_dir'], 'topic_*.json'))
-            if topic_files:
-                latest_topic_file = max(topic_files, key=os.path.getmtime)
-                # 从文件名提取主题：topic_主题名_时间戳.json
-                filename = os.path.basename(latest_topic_file)
-                parts = filename.replace('.json', '').split('_')
-                if len(parts) >= 2:
-                    topic_name = '_'.join(parts[1:-1])  # 去掉'topic'和时间戳
+            # # 获取主题名称（从topic文件名或摘要中提取）
+            # topic_name = None
+            # import glob
+            # topic_files = glob.glob(os.path.join(self.config['output']['data_dir'], 'topic_*.json'))
+            # if topic_files:
+            #     latest_topic_file = max(topic_files, key=os.path.getmtime)
+            #     # 从文件名提取主题：topic_主题名_时间戳.json
+            #     filename = os.path.basename(latest_topic_file)
+            #     parts = filename.replace('.json', '').split('_')
+            #     if len(parts) >= 2:
+            #         topic_name = '_'.join(parts[1:-1])  # 去掉'topic'和时间戳
+            topic_name = self.topic
             
             generator = HTMLGenerator(self.config_path)
             data = generator.load_data()
@@ -333,7 +379,8 @@ class Pipeline:
         start_time = datetime.now()
         
         steps = [
-            ("爬取数据", self.step1_scrape_data),
+            ("获取topic", self.step0_topic_acquisition),
+            ("爬取数据", self.step1_data_acquisition),
             ("清洗数据", self.step2_clean_data),
             ("去重处理", self.step3_deduplicate),
             ("提取实体", self.step4_extract_entities),

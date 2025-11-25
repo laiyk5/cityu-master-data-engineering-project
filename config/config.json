@@ -1,4 +1,18 @@
 {
+  "datasource": {
+    "rss": {
+      "opml": [
+        {
+          "file": "config/HongKong SAR.opml",
+          "enabled": true
+        },
+        {
+          "file": "config/United States.opml",
+          "enabled": true
+        }
+      ]
+    }
+  },
   "scraper": {
     "news_sources": [
       {

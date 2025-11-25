@@ -287,9 +287,11 @@ dependencies = [
     { name = "anthropic" },
     { name = "beautifulsoup4" },
     { name = "dotenv" },
+    { name = "feedparser" },
     { name = "fuzzywuzzy" },
     { name = "httpx", extra = ["socks"] },
     { name = "jinja2" },
+    { name = "listparser" },
     { name = "lxml" },
     { name = "markdown" },
     { name = "nltk" },
@@ -317,9 +319,11 @@ requires-dist = [
     { name = "anthropic", specifier = ">=0.74.1" },
     { name = "beautifulsoup4", specifier = ">=4.14.2" },
     { name = "dotenv", specifier = ">=0.9.9" },
+    { name = "feedparser", specifier = ">=6.0.12" },
     { name = "fuzzywuzzy", specifier = ">=0.18.0" },
     { name = "httpx", extras = ["socks"], specifier = ">=0.28.1" },
     { name = "jinja2", specifier = ">=3.1.6" },
+    { name = "listparser", specifier = ">=0.20" },
     { name = "lxml", specifier = ">=6.0.2" },
     { name = "markdown", specifier = ">=3.10" },
     { name = "nltk", specifier = ">=3.9.2" },
@@ -649,6 +653,18 @@ dependencies = [
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b2/b7/545d2c10c1fc15e48653c91efde329a790f2eecfbbf2bd16003b5db2bab0/dotenv-0.9.9-py2.py3-none-any.whl", hash = "sha256:29cf74a087b31dafdb5a446b6d7e11cbce8ed2741540e2339c69fbef92c94ce9", size = 1892, upload-time = "2025-02-19T22:15:01.647Z" },
+]
+
+[[package]]
+name = "feedparser"
+version = "6.0.12"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "sgmllib3k" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/dc/79/db7edb5e77d6dfbc54d7d9df72828be4318275b2e580549ff45a962f6461/feedparser-6.0.12.tar.gz", hash = "sha256:64f76ce90ae3e8ef5d1ede0f8d3b50ce26bcce71dd8ae5e82b1cd2d4a5f94228", size = 286579, upload-time = "2025-09-10T13:33:59.486Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4e/eb/c96d64137e29ae17d83ad2552470bafe3a7a915e85434d9942077d7fd011/feedparser-6.0.12-py3-none-any.whl", hash = "sha256:6bbff10f5a52662c00a2e3f86a38928c37c48f77b3c511aedcd51de933549324", size = 81480, upload-time = "2025-09-10T13:33:58.022Z" },
 ]
 
 [[package]]
@@ -996,6 +1012,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/e8/5d/447af5ea094b9e4c4054f82e223ada074c552335b9b4b2d14bd9b35a67c4/joblib-1.5.2.tar.gz", hash = "sha256:3faa5c39054b2f03ca547da9b2f52fde67c06240c31853f306aea97f13647b55", size = 331077, upload-time = "2025-08-27T12:15:46.575Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1e/e8/685f47e0d754320684db4425a0967f7d3fa70126bffd76110b7009a0090f/joblib-1.5.2-py3-none-any.whl", hash = "sha256:4e1f0bdbb987e6d843c70cf43714cb276623def372df3c22fe5266b2670bc241", size = 308396, upload-time = "2025-08-27T12:15:45.188Z" },
+]
+
+[[package]]
+name = "listparser"
+version = "0.20"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/be/ee/d9f02600955ca34baf73e824d64b181b412745ed448a0ad1a92cef81115b/listparser-0.20.tar.gz", hash = "sha256:0dda5b41ca9531fc3c438eb4abf4d8a7cf03ef050d196875993e897a66c1f885", size = 12404, upload-time = "2024-03-29T12:21:07.242Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c9/27/bd96818acce8ed1909dff29817096016f5e958ef646a377b34d55afa23b3/listparser-0.20-py3-none-any.whl", hash = "sha256:5daae9895b75191a77b14f5b8eabf7a63a4ca440f215d9bd8d8e5a2eccde02ce", size = 14149, upload-time = "2024-03-29T12:21:06.014Z" },
 ]
 
 [[package]]
@@ -2351,6 +2376,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/18/5d/3bf57dcd21979b887
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a3/dc/17031897dae0efacfea57dfd3a82fdd2a2aeb58e0ff71b77b87e44edc772/setuptools-80.9.0-py3-none-any.whl", hash = "sha256:062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922", size = 1201486, upload-time = "2025-05-27T00:56:49.664Z" },
 ]
+
+[[package]]
+name = "sgmllib3k"
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/9e/bd/3704a8c3e0942d711c1299ebf7b9091930adae6675d7c8f476a7ce48653c/sgmllib3k-1.0.0.tar.gz", hash = "sha256:7868fb1c8bfa764c1ac563d3cf369c381d1325d36124933a726f29fcdaa812e9", size = 5750, upload-time = "2010-08-24T14:33:52.445Z" }
 
 [[package]]
 name = "six"

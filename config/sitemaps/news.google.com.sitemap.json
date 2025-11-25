@@ -1,0 +1,78 @@
+{
+    "_id": "news-google-com-2025-11-25",
+    "startUrl": [
+        "https://news.google.com/search?q={query}&hl=en-US&gl=US&ceid=US:en"
+    ],
+    "selectors": [
+        {
+            "elementLimit": 0,
+            "id": "record_wrapper",
+            "multiple": true,
+            "parentSelectors": [
+                "_root"
+            ],
+            "scroll": false,
+            "selector": "c-wiz.Ccj79",
+            "type": "SelectorElement"
+        },
+        {
+            "id": "source",
+            "multiple": false,
+            "multipleType": "singleColumn",
+            "parentSelectors": [
+                "record_wrapper"
+            ],
+            "regex": "",
+            "selector": ".oovtQ div div",
+            "type": "SelectorText",
+            "version": 2
+        },
+        {
+            "id": "title",
+            "multiple": false,
+            "multipleType": "singleColumn",
+            "parentSelectors": [
+                "record_wrapper"
+            ],
+            "regex": "",
+            "selector": ".B6pJDd a",
+            "type": "SelectorText",
+            "version": 2
+        },
+        {
+            "id": "published_at",
+            "multiple": false,
+            "multipleType": "singleColumn",
+            "parentSelectors": [
+                "record_wrapper"
+            ],
+            "regex": "",
+            "selector": "time",
+            "type": "SelectorText",
+            "version": 2
+        },
+        {
+            "id": "editor",
+            "multiple": false,
+            "multipleType": "singleColumn",
+            "parentSelectors": [
+                "record_wrapper"
+            ],
+            "regex": "",
+            "selector": ".bInasb span",
+            "type": "SelectorText",
+            "version": 2
+        },
+        {
+            "id": "url",
+            "linkType": "linkFromHref",
+            "multiple": false,
+            "parentSelectors": [
+                "record_wrapper"
+            ],
+            "selector": "a.WwrzSb",
+            "type": "SelectorLink",
+            "version": 2
+        }
+    ]
+}

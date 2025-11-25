@@ -48,7 +48,7 @@ class TopicScraper:
         # 初始化数据库（如果可用）
         self.use_database = True
         try:
-            from scraper import DatabaseManager
+            from atss.scraper import DatabaseManager
             self.db_manager = DatabaseManager()
             logger.info("数据库管理器初始化成功")
         except Exception as e:
@@ -62,7 +62,7 @@ class TopicScraper:
         
         if self.use_intelligent_finder:
             try:
-                from intelligent_source_finder import IntelligentSourceFinder
+                from atss.intelligent_source_finder import IntelligentSourceFinder
                 self.source_finder = IntelligentSourceFinder()
                 logger.info("智能新闻源查找器初始化成功")
             except Exception as e:

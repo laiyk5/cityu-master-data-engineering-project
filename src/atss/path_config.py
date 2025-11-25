@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 # 项目根目录
-PROJECT_ROOT = Path(__file__).parent.parent.absolute()
+PROJECT_ROOT = Path(__file__).parent.parent.parent.absolute()
 
 # 主要目录
 SRC_DIR = PROJECT_ROOT / 'src'

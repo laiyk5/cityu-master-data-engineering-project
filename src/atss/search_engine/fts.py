@@ -1,25 +1,8 @@
-from abc import ABC, abstractmethod
+from atss.db_utils import ArticleStorage
+from atss.news_source import NewsSource, News
 from datetime import datetime
-from typing import Iterable
-from news_source import NewsSource, News
-from db_utils import ArticleStorage
-class SearchEngine(ABC):
-    @abstractmethod
-    def search(self, query: str) -> Iterable[News]:
-        """根据查询返回搜索结果"""
-        pass
 
-
-class SimpleSearchEngine(SearchEngine):
-
-    def __init__(self, news_stream: NewsSource):
-        self.news_stream = news_stream
-
-    def search(self, query: str):
-        for news in self.news_stream.get_news():
-            if query.lower() in news.title.lower() or query.lower() in news.content.lower():
-                yield news
-
+from . import SearchEngine
 
 def article_to_news(article: dict) -> News:
     return News(

@@ -9,6 +9,7 @@ import logging
 from datetime import datetime
 import sys
 
+
 # 添加 src 目录到路径
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src')) # ../../src
 
@@ -132,9 +133,10 @@ class Pipeline:
             # # 保存到文件和数据库
             # scraper.save_articles(articles)
 
-            from news_source import RssMetaNewsSource, MetaNewsSource, News
-            from search_engine import SimpleSearchEngine, FTSSearchEngine
-            from db_utils import ArticleStorage
+            from atss.news_source import RssMetaNewsSource, MetaNewsSource, News
+            from atss.search_engine.fts import FTSSearchEngine
+            from atss.search_engine.webscraper import BaiduNewsSearchEngine
+            from atss.db_utils import ArticleStorage
 
             storage = ArticleStorage(reset=False)
             
@@ -166,16 +168,18 @@ class Pipeline:
 
             # search the news by topic
             search_engine = FTSSearchEngine()
-            news = search_engine.search(self.topic)
+            news = list(search_engine.search(self.topic))
 
-            # Save articles
-            # !NOTE: just for compatibility
+            # search the news using web search
+            search_engine = BaiduNewsSearchEngine(limit=10)
+            news.extend(list(search_engine.search(self.topic)))
+
+            # Save articles to files # !NOTE: just for compatibility
             
-            
-            from scraper import MyNewsScraper
+            from atss.scraper import MyNewsScraper
             scraper = MyNewsScraper(self.config_path, use_database=True)
             articles = [news_to_article(n) for n in news]
-            scraper.save_articles(articles)
+            scraper._save_to_file(articles)
 
             logger.info(f"✓ 步骤1完成: 爬取了 {len(articles)} 篇文章")
             return True
@@ -184,7 +188,7 @@ class Pipeline:
             logger.error(f"✗ 步骤1失败: {e}")
             # 创建示例数据以便继续流程
             articles = self._create_sample_data()
-            from scraper import MyNewsScraper
+            from atss.scraper import MyNewsScraper
             scraper_fallback = MyNewsScraper(self.config_path, use_database=False)
             scraper_fallback._save_to_file(articles)
             logger.info("使用示例数据继续")
@@ -200,7 +204,7 @@ class Pipeline:
         logger.info("=" * 50)
         
         try:
-            from data_cleaner import DataCleaner
+            from atss.data_cleaner import DataCleaner
             
             # 读取原始数据
             with open('data/raw_articles.json', 'r', encoding='utf-8') as f:
@@ -224,7 +228,7 @@ class Pipeline:
         logger.info("=" * 50)
         
         try:
-            from deduplicator import Deduplicator
+            from atss.deduplicator import Deduplicator
             
             with open('data/cleaned_articles.json', 'r', encoding='utf-8') as f:
                 cleaned_articles = json.load(f)
@@ -249,7 +253,7 @@ class Pipeline:
         logger.info("=" * 50)
         
         try:
-            from entity_extractor import EntityExtractor
+            from atss.entity_extractor import EntityExtractor
             
             with open('data/deduplicated_articles.json', 'r', encoding='utf-8') as f:
                 articles = json.load(f)
@@ -272,7 +276,7 @@ class Pipeline:
         logger.info("=" * 50)
         
         try:
-            from summarizer import Summarizer
+            from atss.summarizer import Summarizer
             
             with open('data/deduplicated_articles.json', 'r', encoding='utf-8') as f:
                 articles = json.load(f)
@@ -295,7 +299,7 @@ class Pipeline:
         logger.info("=" * 50)
         
         try:
-            from timeline_generator import TimelineGenerator
+            from atss.timeline_generator import TimelineGenerator
             
             with open('data/deduplicated_articles.json', 'r', encoding='utf-8') as f:
                 articles = json.load(f)
@@ -318,7 +322,7 @@ class Pipeline:
         logger.info("=" * 50)
         
         try:
-            from html_generator import HTMLGenerator
+            from atss.html_generator import HTMLGenerator
             
             # # 获取主题名称（从topic文件名或摘要中提取）
             # topic_name = None

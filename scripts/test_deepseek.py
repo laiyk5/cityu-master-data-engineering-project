@@ -90,7 +90,7 @@ def test_entity_extraction():
     print("测试实体提取功能")
     print("=" * 60)
     
-    from entity_extractor import EntityExtractor
+    from atss.entity_extractor import EntityExtractor
     
     # 测试文章
     test_articles = [

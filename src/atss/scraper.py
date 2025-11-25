@@ -17,7 +17,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 
-from db_utils import ArticleStorage
+from atss.db_utils import ArticleStorage
 
 # 加载环境变量
 load_dotenv()

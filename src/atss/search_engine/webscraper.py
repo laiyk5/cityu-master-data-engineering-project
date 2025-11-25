@@ -141,9 +141,11 @@ class WebScraperSearchEngine(SearchEngine):
             record["url"] = url
             published_at = record.get("published_at", "")
             if published_at:
-                published_at = dateparser.parse(published_at)   # parse human readable strings like "2 hours ago"
-            else:
+                published_at = dateparser.parse(published_at)  # parse human readable strings like "2 hours ago"
+            if not published_at:
                 raise ValueError("No published_at found")
+            else:
+                published_at = published_at.date()
             news = News(
                 title=record.get("title", "No Title"),
                 content=record.get("content", "No Content"),

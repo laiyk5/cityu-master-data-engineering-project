@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 # 加载环境变量
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))  # ../.env
 
 def test_deepseek_connection():
     """测试 DeepSeek API 连接"""

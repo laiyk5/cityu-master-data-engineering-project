@@ -33,3 +33,8 @@ build/
 # Sensitive information (e.g., API keys, passwords)
 config.ini
 .env
+
+
+# project specific ignores
+data/
+logs/

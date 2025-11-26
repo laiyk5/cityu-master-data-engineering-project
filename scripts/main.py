@@ -9,8 +9,6 @@ import logging
 from datetime import datetime
 import sys
 
-from atss.search_engine.webscraper import BaiduNewsSearchEngine
-
 
 # 添加 src 目录到路径
 sys.path.insert(
@@ -200,8 +198,7 @@ class Pipeline:
                 for name, search_engine in search_engines.items():
                     logger.info(f"Searching news with Web Search Engine {name}...")
                     all_news.extend(list(search_engine.search(self.topic)))
-                    return news
-                return news
+                return all_news
 
             rss_news = acuire_news_from_rss()
             websearch_news = acuire_news_from_websearch()
@@ -220,7 +217,7 @@ class Pipeline:
             return True
 
         except Exception as e:
-            logger.error(f"✗ 步骤1失败: {e}")
+            logger.error(f"✗ 步骤1失败: {e}", stack_info=True)
             # 创建示例数据以便继续流程
             articles = self._create_sample_data()
             from atss.scraper import MyNewsScraper

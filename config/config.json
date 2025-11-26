@@ -3,14 +3,28 @@
     "rss": {
       "opml": [
         {
-          "file": "config/HongKong SAR.opml",
+          "file": "config/rss/HongKong SAR.opml",
           "enabled": true
         },
         {
-          "file": "config/United States.opml",
+          "file": "config/rss/United States.opml",
           "enabled": true
         }
       ]
+    }
+  },
+  "search_engine": {
+    "webscraper": {
+      "Google News": {
+        "enabled": true,
+        "sitemap": "config/sitemaps/google_news.sitemap.json",
+        "max_results": 10
+      },
+      "Baidu News": {
+        "enabled": true,
+        "sitemap": "config/sitemaps/baidu_news.sitemap.json",
+        "max_results": 10
+      }
     }
   },
   "scraper": {

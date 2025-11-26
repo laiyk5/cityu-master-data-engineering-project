@@ -2,6 +2,7 @@ import feedparser
 from abc import ABC, abstractmethod
 from typing import Iterable
 from datetime import datetime
+from atss import logger
 
 news_feeds = [
     "https://www.hongkongfp.com/feed/",
@@ -78,8 +79,10 @@ class RssNewsSource(NewsSource):
     def __init__(self, url):
         self._url = url
         self._feed = feedparser.parse(self._url)
+        self._source = self._feed.feed.get('title', 'Unknown Source')
     
     def get_news(self) -> Iterable[News]:
+        logger.info(f"Fetching news from RSS feed: {self._source}")
         for entry in self._feed.entries:
             # create a news object
             try:
@@ -92,7 +95,7 @@ class RssNewsSource(NewsSource):
                     title=title,
                     content=content,
                     url=url,
-                    source=self._feed.feed.get('title', 'Unknown Source'),
+                    source=self._source,
                     published_at=published_at
                 )
             except Exception as e:
@@ -135,7 +138,7 @@ def _topic_search(news_source: NewsSource, topic: str) -> Iterable[News]:
 
 if __name__ == "__main__":
     # 测试 RSS 新闻源
-    with open("HongKong SAR.opml", "r", encoding="utf-8") as f:
+    with open("config/rss/HongKong SAR.opml", "r", encoding="utf-8") as f:
         opml_content = f.read()
     news_source = RssMetaNewsSource(opml_content)
     articles = _topic_search(news_source, "National Games")

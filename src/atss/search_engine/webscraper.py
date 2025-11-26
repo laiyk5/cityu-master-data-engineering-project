@@ -22,7 +22,6 @@ from atss.news_source import News
 from . import SearchEngine
 import json
 
-from atss.path_config import CONFIG_DIR
 
 from bs4 import BeautifulSoup
 
@@ -72,15 +71,11 @@ class Parser:
 
 
 class WebScraperSearchEngine(SearchEngine):
-    def __init__(self, limit: int = 10, sitemap_path: str = None, go_detail=False):
+    def __init__(self, sitemap_path, limit: int = 10, go_detail=False):
         self.limit = limit
         self.go_detail = go_detail
         # load site map
-        if sitemap_path is None:
-            self._sitemap_path = CONFIG_DIR / "sitemaps" / "news.google.com.sitemap.json"
-        else:
-            self._sitemap_path = sitemap_path
-        with open(self._sitemap_path, "r", encoding="utf-8") as f:
+        with open(sitemap_path, "r", encoding="utf-8") as f:
             self._sitemap = json.load(f)
 
         from selenium.webdriver import ChromeOptions, Chrome
@@ -196,36 +191,21 @@ class WebScraperSearchEngine(SearchEngine):
 
 
 
-class GoogleNewsSearchEngine(SearchEngine):
-    def __init__(self, limit: int = 10, go_detail=False):
-        self.limit = limit
-        self._se = WebScraperSearchEngine(limit=limit, sitemap_path=CONFIG_DIR / "sitemaps" / "news.google.com.sitemap.json", go_detail=go_detail)
-
-    def search(self, query: str) -> Iterable[News]:
-        return self._se.search(query)
-    
-
-class BaiduNewsSearchEngine(SearchEngine):
-    def __init__(self, limit: int = 10):
-        self.limit = limit
-        self._se = WebScraperSearchEngine(limit=limit, sitemap_path=CONFIG_DIR / "sitemaps" / "baidu_news.sitemap.json")
-
-    def search(self, query: str) -> Iterable[News]:
-        return self._se.search(query)
-    
-
-
 if __name__ == "__main__":
+    from atss.config import get_config
+
+    webscraper_config = get_config()["search_engine"]["webscraper"]
+
     # 测试Google News搜索引擎
-    # google_search_engine = GoogleNewsSearchEngine(limit=1, go_detail=True)
-    # query = "Japan Tiwan"
-    # search_results = list(google_search_engine.search(query))
-    # logger.info(f"\n搜索关键词 '{query}'，找到 {len(search_results)} 篇相关文章:")
-    # for i, article in enumerate(search_results, 1):
-    #     logger.info(f"{i}. {article}")
+    google_search_engine = WebScraperSearchEngine(webscraper_config["Google News"]["sitemap"], limit=1, go_detail=True)
+    query = "Japan Tiwan"
+    search_results = list(google_search_engine.search(query))
+    logger.info(f"\n搜索关键词 '{query}'，找到 {len(search_results)} 篇相关文章:")
+    for i, article in enumerate(search_results, 1):
+        logger.info(f"{i}. {article}")
 
     # 测试Baidu News搜索引擎
-    baidu_search_engine = BaiduNewsSearchEngine(limit=10)
+    baidu_search_engine = WebScraperSearchEngine(webscraper_config["Baidu News"]["sitemap"], limit=10)
     query = "日本 台湾"
     search_results = list(baidu_search_engine.search(query))
     logger.info(f"\n搜索关键词 '{query}'，找到 {len(search_results)} 篇相关文章:")

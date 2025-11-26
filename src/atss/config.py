@@ -1,4 +1,4 @@
-from path_config import CONFIG_FILE
+from .path_config import CONFIG_FILE
 
 def get_config():
     """加载配置文件"""

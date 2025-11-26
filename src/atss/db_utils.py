@@ -165,7 +165,7 @@ class ArticleStorage:
     def _create_tables(self):
         """创建表结构"""
         try:
-            conn = NewsDatabase.get_admin_connection()
+            conn = NewsDatabase.get_connection()
             cursor = conn.cursor()
 
             # 创建文章表
@@ -222,7 +222,7 @@ class ArticleStorage:
 
             conn.commit()
             cursor.close()
-            NewsDatabase.close_admin_connection()
+            NewsDatabase.close_connection()
 
             print("\n✓ 所有表和索引创建完成")
 

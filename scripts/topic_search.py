@@ -48,8 +48,8 @@ class TopicScraper:
         # 初始化数据库（如果可用）
         self.use_database = True
         try:
-            from atss.scraper import DatabaseManager
-            self.db_manager = DatabaseManager()
+            from atss.db_utils import ArticleStorage
+            self.db_manager = ArticleStorage()
             logger.info("数据库管理器初始化成功")
         except Exception as e:
             logger.warning(f"数据库初始化失败，将只保存到文件: {e}")

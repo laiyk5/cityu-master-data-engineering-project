@@ -12,8 +12,11 @@ import sys
 
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # project root
+from psycopg2.extras import RealDictCursor
 
-from src.atss.db_utils2 import DatabaseReader
+from typing import List, Dict
+
+from atss.db_utils import ArticleStorage
 
 # Serve templates from project-level templates/ and static assets from project-level static/
 app = Flask(
@@ -21,6 +24,8 @@ app = Flask(
     template_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates')),
     static_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static')),
 )
+
+from atss import logger
 
 
 @app.route('/')
@@ -52,7 +57,7 @@ def articles_page():
     if per_page < 1:
         per_page = 25
 
-    reader = DatabaseReader()
+    reader = ArticleStorage()
     try:
         offset = (page - 1) * per_page
         if q:
@@ -99,17 +104,17 @@ def api_articles():
     if per_page < 1:
         per_page = 25
 
-    reader = DatabaseReader()
+    storage = ArticleStorage()
     try:
         offset = (page - 1) * per_page
         if q:
-            total = reader.get_article_count_by_query(q)
-            articles = reader.get_articles_by_query_with_sort(q, limit=per_page, offset=offset, sort_by=sort_by, sort_dir=sort_dir)
+            total = storage.get_article_count_by_query(q)
+            articles = storage.get_articles_by_query_with_sort(q, limit=per_page, offset=offset, sort_by=sort_by, sort_dir=sort_dir)
         else:
-            total = reader.get_article_count()
-            articles = reader.get_all_articles_with_sort_and_offset(limit=per_page, offset=offset, sort_by=sort_by, sort_dir=sort_dir)
+            total = storage.get_article_count()
+            articles = storage.get_all_articles_with_sort_and_offset(limit=per_page, offset=offset, sort_by=sort_by, sort_dir=sort_dir)
     finally:
-        reader.close()
+        storage.close()
 
     total_pages = max(1, (total + per_page - 1) // per_page)
 

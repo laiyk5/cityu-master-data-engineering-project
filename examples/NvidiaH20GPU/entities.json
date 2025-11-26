@@ -1,0 +1,33 @@
+{
+  "entities": {
+    "people": [],
+    "organizations": [
+      {
+        "name": "英伟达",
+        "count": 4
+      },
+      {
+        "name": "阿里云",
+        "count": 2
+      }
+    ],
+    "locations": [
+      {
+        "name": "中国",
+        "count": 3
+      },
+      {
+        "name": "中国市场",
+        "count": 2
+      }
+    ],
+    "dates": [],
+    "misc": []
+  },
+  "summary": {
+    "total_people": 0,
+    "total_organizations": 2,
+    "total_locations": 2,
+    "total_dates": 0
+  }
+}

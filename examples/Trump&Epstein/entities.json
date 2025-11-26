@@ -1,0 +1,53 @@
+{
+  "entities": {
+    "people": [
+      {
+        "name": "Trump",
+        "count": 9
+      },
+      {
+        "name": "Epstein",
+        "count": 4
+      },
+      {
+        "name": "Jeffrey Epstein",
+        "count": 3
+      },
+      {
+        "name": "Bill Clinton",
+        "count": 2
+      }
+    ],
+    "organizations": [
+      {
+        "name": "House",
+        "count": 4
+      },
+      {
+        "name": "Congress",
+        "count": 2
+      },
+      {
+        "name": "Justice Department",
+        "count": 2
+      },
+      {
+        "name": "GOP",
+        "count": 2
+      },
+      {
+        "name": "DOJ",
+        "count": 2
+      }
+    ],
+    "locations": [],
+    "dates": [],
+    "misc": []
+  },
+  "summary": {
+    "total_people": 4,
+    "total_organizations": 5,
+    "total_locations": 0,
+    "total_dates": 0
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "timeline": [
+    {
+      "date": "2025-11-12",
+      "event_count": 2,
+      "main_event": "Trump 'knew about the girls,' Jeffrey Epstein claimed in emails as Democrats, GOP release trove of records",
+      "events": [
+        {
+          "title": "Trump 'knew about the girls,' Jeffrey Epstein claimed in emails as Democrats, GOP release trove of records",
+          "source": "World & Nation",
+          "url": "https://www.latimes.com/politics/story/2025-11-12/la-na-epstein-trump",
+          "content_snippet": "Donald Trump 'spent hours at my house' and 'knew about the girls,' Jeffrey Epstein wrote in emails that House Democrats released Wednesday...."
+        },
+        {
+          "title": "What's in the explosive Jeffrey Epstein emails accusing Trump? Here is what we know",
+          "source": "World & Nation",
+          "url": "https://www.latimes.com/world-nation/story/2025-11-12/what-we-know-epstein-emails-accusing-trump",
+          "content_snippet": "Donald Trump, a longtime friend of Epstein's, has said he fell out with the convicted sex offender before he was elected president and has denied any ..."
+        }
+      ]
+    },
+    {
+      "date": "2025-11-14",
+      "event_count": 1,
+      "main_event": "Trickle of revelations fuels scandal over Trump's ties to Epstein",
+      "events": [
+        {
+          "title": "Trickle of revelations fuels scandal over Trump's ties to Epstein",
+          "source": "World & Nation",
+          "url": "https://www.latimes.com/politics/story/2025-11-13/trickle-of-revelations-fuels-scandal-over-trumps-ties-to-epstein",
+          "content_snippet": "The emails prompted a wave of GOP lawmakers to pledge support for a House measure that would call on the Justice Department to release its Epstein fil..."
+        }
+      ]
+    },
+    {
+      "date": "2025-11-18",
+      "event_count": 3,
+      "main_event": "Could Trump destroy the Epstein files?",
+      "events": [
+        {
+          "title": "Could Trump destroy the Epstein files?",
+          "source": "World & Nation",
+          "url": "https://www.latimes.com/politics/story/2025-11-18/could-trump-destroy-epstein-files",
+          "content_snippet": "Bipartisan fervor has grown over the Epstein files, with House lawmakers across party lines expected to unite behind a bill on Tuesday that would comp..."
+        },
+        {
+          "title": "Congress votes to release Epstein files after Trump reverses course",
+          "source": "World & Nation",
+          "url": "https://www.latimes.com/politics/story/2025-11-18/house-set-to-vote-to-release-epstein-files-following-months-of-pressure",
+          "content_snippet": "The House and Senate voted overwhelmingly to demand the release of all Justice Department records related to the investigation of late financier Jeffr..."
+        },
+        {
+          "title": "House expected to force DOJ to releaseEpsteinfiles",
+          "source": "Unkown",
+          "url": "http://www.chinadaily.com.cn/a/202511/18/WS691bdd7ba310d6866eb2a113.html",
+          "content_snippet": "One ofEpstein's emails calledTrumpthe \"dog that hasn't barked\", and told Maxwell that one of the girls had \"spent hours at my house\" with Trump. Trump..."
+        }
+      ]
+    },
+    {
+      "date": "2025-11-19",
+      "event_count": 1,
+      "main_event": "Former official to quit public roles overEpsteinemails",
+      "events": [
+        {
+          "title": "Former official to quit public roles overEpsteinemails",
+          "source": "Unkown",
+          "url": "http://www.chinadaily.com.cn/a/202511/19/WS691d22a3a310d6866eb2a3e5.html",
+          "content_snippet": "Trumpsaid the Department of Justice had \"already turned over tens of thousands of pages\" ofEpsteindocuments and was looking at \"various Democrat opera..."
+        }
+      ]
+    },
+    {
+      "date": "2025-11-20",
+      "event_count": 3,
+      "main_event": "Trump signs bill demanding his administration release the Epstein files",
+      "events": [
+        {
+          "title": "Trump signs bill demanding his administration release the Epstein files",
+          "source": "World & Nation",
+          "url": "https://www.latimes.com/politics/story/2025-11-19/trump-signs-bill-demanding-administration-release-epstein-files",
+          "content_snippet": "The legislation compels Atty. Gen. Pam Bondi to make available \"all unclassified records, documents, communications and investigative materials\" in th..."
+        },
+        {
+          "title": "Trumpsays he has just signed bill to releaseEpsteinfiles",
+          "source": "Unkown",
+          "url": "http://www.chinadaily.com.cn/a/202511/20/WS691e7b11a310d6866eb2a791.html",
+          "content_snippet": "Trumpthen directed the DOJ to investigate high-profile Democrats connected to Epstein, including former President Bill Clinton, former Treasury Secret..."
+        },
+        {
+          "title": "Congress acts swiftly to force release ofEpsteinfiles",
+          "source": "Unkown",
+          "url": "http://www.chinadaily.com.cn/a/202511/20/WS691e6deba310d6866eb2a6e7.html",
+          "content_snippet": "Two days afterTrump's abrupt about-face, the House of Representatives passed the measure with a vote of 427-1, sending a resolution requiring the rele..."
+        }
+      ]
+    }
+  ],
+  "generated_at": "2025-11-26T09:15:49.232206",
+  "total_events": 10
+}

@@ -15,7 +15,14 @@ logger = logging.getLogger(__name__)
 
 
 class DataCleaner:
-    """数据清洗类"""
+    """数据清洗类
+    
+    feature:
+    1. 去除HTML标签, 特殊字符但保留基本标点，确保文本可读性
+    2. 去除广告和样板文字，提高内容质量
+    3. 标准化日期格式为 YYYY-MM-DD
+    4. 验证文章数据质量，剔除低质量内容
+    """
     
     def __init__(self):
         """初始化数据清洗器"""

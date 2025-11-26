@@ -1,0 +1,83 @@
+{
+  "entities": {
+    "people": [
+      {
+        "name": "Wang Haoming",
+        "count": 2
+      },
+      {
+        "name": "John Lee",
+        "count": 2
+      }
+    ],
+    "organizations": [
+      {
+        "name": "Xinhua",
+        "count": 6
+      },
+      {
+        "name": "National Games",
+        "count": 6
+      }
+    ],
+    "locations": [
+      {
+        "name": "China",
+        "count": 6
+      },
+      {
+        "name": "Guangdong",
+        "count": 6
+      },
+      {
+        "name": "Macao",
+        "count": 5
+      },
+      {
+        "name": "Shenzhen",
+        "count": 4
+      },
+      {
+        "name": "Hong Kong",
+        "count": 4
+      },
+      {
+        "name": "Guangzhou",
+        "count": 3
+      },
+      {
+        "name": "Greater Bay Area",
+        "count": 3
+      },
+      {
+        "name": "Bao'an District",
+        "count": 2
+      }
+    ],
+    "dates": [
+      {
+        "name": "Nov. 21",
+        "count": 5
+      },
+      {
+        "name": "Friday",
+        "count": 3
+      },
+      {
+        "name": "November 21",
+        "count": 2
+      },
+      {
+        "name": "Nov. 21, 2025",
+        "count": 2
+      }
+    ],
+    "misc": []
+  },
+  "summary": {
+    "total_people": 2,
+    "total_organizations": 2,
+    "total_locations": 8,
+    "total_dates": 4
+  }
+}

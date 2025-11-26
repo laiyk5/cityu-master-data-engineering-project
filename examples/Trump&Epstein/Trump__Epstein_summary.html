@@ -1,0 +1,517 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Summary Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .summary-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            line-height: 1.8;
+        }
+        
+        .entity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .entity-category {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 3px solid #667eea;
+        }
+        
+        .entity-category h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .entity-list {
+            list-style: none;
+        }
+        
+        .entity-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .entity-name {
+            font-weight: 500;
+        }
+        
+        .entity-count {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #667eea;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #667eea;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-event {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .article-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 3px solid #667eea;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .article-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .article-meta {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .article-source {
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .article-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .article-link:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+            margin: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📰 Topic Summary Page</h1>
+            <p class="subtitle">Automatically Generated News Summary and Analysis</p>
+            <p class="subtitle">Generated: 2025-11-26 09:15:49</p>
+        </div>
+        
+        <div class="content">
+            <!-- 统计信息 -->
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Total Articles</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">9</div>
+                    <div class="stat-label">Key Entities</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Timeline Events</div>
+                </div>
+            </div>
+            
+            <!-- Main Summary -->
+            <div class="section">
+                <h2 class="section-title">📋 Main Summary</h2>
+                <div class="summary-box">
+                    A bipartisan congressional effort has culminated in legislation compelling the full release of documents related to the Jeffrey Epstein investigation. Following initial resistance, former President Donald Trump signed the bill, which mandates Attorney General Pam Bondi to release all unclassified Justice Department records, communications, and investigative materials concerning Epstein within 30 days.
+
+The legislative action gained overwhelming support, with the House of Representatives passing the measure 427-1 and the Senate following suit, reflecting rare cross-party consensus. This development occurred alongside the release of emails by House Democrats in which Epstein made claims about Trump, alleging he "spent hours at my house" and "knew about the girls." Trump has consistently denied any wrongdoing, stating he had a falling out with the convicted sex offender years before his presidency.
+
+In response, Trump directed the Justice Department to investigate prominent Democrats mentioned in the files, including former President Bill Clinton, former Treasury Secretary Larry Summers, and LinkedIn co-founder Reid Hoffman. The DOJ confirmed it had already turned over tens of thousands of pages of documents. The situation has led to a former official announcing their departure from public roles, underscoring the scandal's widening impact as both parties pursue transparency and accountability regarding associations with Epstein.
+                </div>
+            </div>
+            
+            <!-- Key Entities -->
+            <div class="section">
+                <h2 class="section-title">👥 Key Entities</h2>
+                <div class="entity-grid">
+                    
+                    <div class="entity-category">
+                        <h3>👤 People</h3>
+                        <ul class="entity-list">
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">Trump</span>
+                                <span class="entity-count">9</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">Epstein</span>
+                                <span class="entity-count">4</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">Jeffrey Epstein</span>
+                                <span class="entity-count">3</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">Bill Clinton</span>
+                                <span class="entity-count">2</span>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    
+                    
+                    
+                    <div class="entity-category">
+                        <h3>🏢 Organizations</h3>
+                        <ul class="entity-list">
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">House</span>
+                                <span class="entity-count">4</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">Congress</span>
+                                <span class="entity-count">2</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">Justice Department</span>
+                                <span class="entity-count">2</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">GOP</span>
+                                <span class="entity-count">2</span>
+                            </li>
+                            
+                            <li class="entity-item">
+                                <span class="entity-name">DOJ</span>
+                                <span class="entity-count">2</span>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <!-- Timeline -->
+            <div class="section">
+                <h2 class="section-title">📅 Event Timeline</h2>
+                <div class="timeline">
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025-11-12</div>
+                        <div class="timeline-event">
+                            <strong>Trump 'knew about the girls,' Jeffrey Epstein claimed in emails as Democrats, GOP release trove of records</strong>
+                            
+                            <p style="color: #666; margin-top: 5px;">(2 related events)</p>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025-11-14</div>
+                        <div class="timeline-event">
+                            <strong>Trickle of revelations fuels scandal over Trump's ties to Epstein</strong>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025-11-18</div>
+                        <div class="timeline-event">
+                            <strong>Could Trump destroy the Epstein files?</strong>
+                            
+                            <p style="color: #666; margin-top: 5px;">(3 related events)</p>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025-11-19</div>
+                        <div class="timeline-event">
+                            <strong>Former official to quit public roles overEpsteinemails</strong>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025-11-20</div>
+                        <div class="timeline-event">
+                            <strong>Trump signs bill demanding his administration release the Epstein files</strong>
+                            
+                            <p style="color: #666; margin-top: 5px;">(3 related events)</p>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Articles -->
+            <div class="section">
+                <h2 class="section-title">📰 Source Articles</h2>
+                <div class="articles-grid">
+                    
+                    <div class="article-card">
+                        <div class="article-title">Trump signs bill demanding his administration release the Epstein files</div>
+                        <div class="article-meta">
+                            <span class="article-source">World & Nation</span> • 
+                            <span>2025-11-20T00:00:00</span>
+                        </div>
+                        <a href="https://www.latimes.com/politics/story/2025-11-19/trump-signs-bill-demanding-administration-release-epstein-files" target="_blank" class="article-link">Read Article →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">Could Trump destroy the Epstein files?</div>
+                        <div class="article-meta">
+                            <span class="article-source">World & Nation</span> • 
+                            <span>2025-11-18T00:00:00</span>
+                        </div>
+                        <a href="https://www.latimes.com/politics/story/2025-11-18/could-trump-destroy-epstein-files" target="_blank" class="article-link">Read Article →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">Congress votes to release Epstein files after Trump reverses course</div>
+                        <div class="article-meta">
+                            <span class="article-source">World & Nation</span> • 
+                            <span>2025-11-18T00:00:00</span>
+                        </div>
+                        <a href="https://www.latimes.com/politics/story/2025-11-18/house-set-to-vote-to-release-epstein-files-following-months-of-pressure" target="_blank" class="article-link">Read Article →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">Trickle of revelations fuels scandal over Trump's ties to Epstein</div>
+                        <div class="article-meta">
+                            <span class="article-source">World & Nation</span> • 
+                            <span>2025-11-14T00:00:00</span>
+                        </div>
+                        <a href="https://www.latimes.com/politics/story/2025-11-13/trickle-of-revelations-fuels-scandal-over-trumps-ties-to-epstein" target="_blank" class="article-link">Read Article →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">Trump 'knew about the girls,' Jeffrey Epstein claimed in emails as Democrats, GOP release trove of records</div>
+                        <div class="article-meta">
+                            <span class="article-source">World & Nation</span> • 
+                            <span>2025-11-12T00:00:00</span>
+                        </div>
+                        <a href="https://www.latimes.com/politics/story/2025-11-12/la-na-epstein-trump" target="_blank" class="article-link">Read Article →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">What's in the explosive Jeffrey Epstein emails accusing Trump? Here is what we know</div>
+                        <div class="article-meta">
+                            <span class="article-source">World & Nation</span> • 
+                            <span>2025-11-12T00:00:00</span>
+                        </div>
+                        <a href="https://www.latimes.com/world-nation/story/2025-11-12/what-we-know-epstein-emails-accusing-trump" target="_blank" class="article-link">Read Article →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">Trumpsays he has just signed bill to releaseEpsteinfiles</div>
+                        <div class="article-meta">
+                            <span class="article-source">Unkown</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="http://www.chinadaily.com.cn/a/202511/20/WS691e7b11a310d6866eb2a791.html" target="_blank" class="article-link">Read Article →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">Congress acts swiftly to force release ofEpsteinfiles</div>
+                        <div class="article-meta">
+                            <span class="article-source">Unkown</span> • 
+                            <span>2025-11-20</span>
+                        </div>
+                        <a href="http://www.chinadaily.com.cn/a/202511/20/WS691e6deba310d6866eb2a6e7.html" target="_blank" class="article-link">Read Article →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">Former official to quit public roles overEpsteinemails</div>
+                        <div class="article-meta">
+                            <span class="article-source">Unkown</span> • 
+                            <span>2025-11-19</span>
+                        </div>
+                        <a href="http://www.chinadaily.com.cn/a/202511/19/WS691d22a3a310d6866eb2a3e5.html" target="_blank" class="article-link">Read Article →</a>
+                    </div>
+                    
+                    <div class="article-card">
+                        <div class="article-title">House expected to force DOJ to releaseEpsteinfiles</div>
+                        <div class="article-meta">
+                            <span class="article-source">Unkown</span> • 
+                            <span>2025-11-18</span>
+                        </div>
+                        <a href="http://www.chinadaily.com.cn/a/202511/18/WS691bdd7ba310d6866eb2a113.html" target="_blank" class="article-link">Read Article →</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Generated by Automated Topic Summary System | © 2025</p>
+        </div>
+    </div>
+</body>
+</html>
+        

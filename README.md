@@ -21,14 +21,12 @@
 
 ```bash
 # 1. 安装依赖
+pip install uv
 uv sync
 
 # 2. 配置 API（复制并编辑 .env）
 Copy-Item config/.env.example .env
 # 在 .env 中添加: DEEPSEEK_API_KEY=your-key
-
-# 3. 运行启动向导
-python scripts/start.py
 ```
 
 **或直接运行:**
@@ -36,67 +34,64 @@ python scripts/start.py
 python run.py
 ```
 
-## 📁 项目结构
+## 📁 项目结构（仓库概览）
 
 ```
-data-project/
-├── src/                          # 源代码模块
-│   ├── scraper.py               # 数据爬取模块
-│   ├── data_cleaner.py          # 数据清洗模块
-│   ├── deduplicator.py          # 去重模块
-│   ├── entity_extractor.py      # 实体提取模块
-│   ├── summarizer.py            # 摘要生成模块
-│   ├── timeline_generator.py    # 时间线生成模块
-│   ├── html_generator.py        # HTML生成模块
-│   ├── db_utils.py              # 数据库工具
-│   └── init_database.py         # 数据库初始化
-│
-├── scripts/                      # 可执行脚本
-│   ├── main.py                  # 主管道程序
-│   ├── start.py                 # 启动向导
-│   ├── topic_search.py          # 主题搜索（交互式）
-│   ├── search_cli.py            # 主题搜索（命令行）
-│   ├── test_deepseek.py         # DeepSeek API 测试
-│   └── demo.py                  # 演示脚本
-│
-├── docs/                         # 文档
-│   ├── README.md                # 主文档
-│   ├── 文档索引.md              # 文档索引
-│   ├── 项目状态总结.md          # 项目状态
-│   ├── PROJECT_PLAN.md          # 项目规划
-│   ├── QUICKSTART_DEEPSEEK.md   # DeepSeek 快速开始
-│   ├── DEEPSEEK_INTEGRATION.md  # DeepSeek 集成文档
-│   ├── DATABASE_QUICKSTART.md   # 数据库快速开始
-│   ├── DATABASE_README.md       # 数据库文档
-│   ├── TOPIC_SEARCH_QUICKREF.md # 主题搜索速查
-│   └── TOPIC_SEARCH_GUIDE.md    # 主题搜索指南
-│
-├── config/                       # 配置文件
-│   ├── config.json              # 主配置文件
-│   └── .env.example             # 环境变量模板
-│
-├── data/                         # 数据文件
-│   ├── raw_articles.json
-│   ├── cleaned_articles.json
-│   ├── deduplicated_articles.json
-│   ├── entities.json
-│   ├── summary.json
-│   └── timeline.json
-│
-├── output/                       # 输出文件
-│   └── topic_summary.html       # 生成的HTML页面
-│
-├── logs/                         # 日志文件
-│   ├── pipeline.log
-│   └── pipeline_with_evaluation.log
-│
-├── temp/                         # 临时文件
-├── tests/                        # 测试文件
-│
-├── .env                          # 环境变量（不提交到git）
-├── .gitignore                    # Git忽略文件
-├── requirements.txt              # Python依赖
-└── run.py                        # 主启动文件
+cityu-master-data-engineering-project-main/
+├── pyproject.toml               # 项目元信息与依赖（如果使用 Poetry/PEP 517）
+├── README.md                    # 项目说明（当前文件）
+├── LICENSE                      # 许可（如存在）
+├── .env.example                 # 示例环境变量
+├── config/                      # 配置（JSON、站点地图、RSS 等）
+│   ├── config.json
+│   ├── rss/
+│   │   ├── HongKong SAR.opml
+│   │   └── United States.opml
+│   └── sitemaps/
+│       ├── baidu_news.sitemap.json
+│       └── google_news.sitemap.json
+├── data/                        # 数据目录（爬取、清洗、去重、实体、摘要等中间/输出文件）
+├── examples/                    # 示例主题与数据（供查看/演示）
+│   ├── NationalGames/
+│   ├── NvidiaH20GPU/
+│   └── Trump&Epstein/
+├── output/                      # 最终输出（HTML 页面、报告）
+├── scripts/                     # 可直接运行的脚本/工具
+│   ├── main.py                  # 主管道（执行爬取到页面生成）
+│   ├── start.py                 # 运行/配置向导脚本
+│   ├── topic_search.py          # 交互式主题搜索工具
+│   ├── search_cli.py            # 命令行主题搜索工具
+│   ├── test_deepseek.py         # DeepSeek API 测试脚本
+│   ├── web_app.py               # 本地化前端/演示页面入口
+│   └── score.py                 # 评分/评估相关脚本
+├── src/                         # 源码包
+│   └── atss/                    # 应用核心模块
+│       ├── __init__.py
+│       ├── ai.py                           # 
+│       ├── config.py                       # 
+│       ├── data_cleaner.py                 # 数据清洗模块
+│       ├── db_utils.py                     # 数据库工具
+│       ├── deduplicator.py                 # 去重模块
+│       ├── entity_extractor.py             # 实体提取模块
+│       ├── html_generator.py               # HTML生成模块
+│       ├── init_database.py                # 数据库初始化
+│       ├── intelligent_source_finder.py    # 
+│       ├── news_source.py                  # 
+│       ├── path_config.py                  # 
+│       ├── scraper.py                      # 数据爬取模块
+│       ├── summarizer.py                   # 摘要生成模块
+│       ├── timeline_generator.py           # 时间线生成模块
+│       └── search_engine/                  # 
+│           ├── fts.py
+│           └── webscraper.py
+├── static/                      # 静态资源（页面样式/脚本）
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│       └── col_resize.js
+├── templates/                   # HTML 模板
+│   └── articles.html
+└── uv.lock                      # (uv 环境锁文件，如果使用 uv) 
 ```
 
 ## 快速开始
@@ -104,6 +99,7 @@ data-project/
 ### 1. 安装依赖
 
 ```bash
+pip install uv
 uv venv & uv sync
 ```
 
@@ -121,27 +117,12 @@ DEEPSEEK_API_KEY=your-api-key-here
 
 ### 3. 运行项目
 
-**方式1: 使用启动向导**
+**运行完整管道**
 ```bash
-python scripts/start.py
+python scripts/main.py
 ```
 
-**方式2: 运行完整管道**
-```bash
-python run.py
-```
-
-**方式3: 主题搜索**
-```bash
-python scripts/topic_search.py
-```
-
-## 文档
-
-所有文档位于 `docs/` 目录：
-- 📖 [完整文档索引](docs/文档索引.md)
-- 🚀 [快速开始指南](docs/QUICKSTART_DEEPSEEK.md)
-- 📊 [项目状态总结](docs/项目状态总结.md)
+‼️ATTENTION: 请使用英文字符搜索，暂时不支持中文字符搜索
 
 ## 功能特性
 

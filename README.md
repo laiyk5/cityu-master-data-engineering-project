@@ -107,7 +107,7 @@ uv venv & uv sync
 
 复制配置文件：
 ```bash
-Copy-Item config/.env.example .env
+Copy-Item .env.example .env
 ```
 
 编辑 `.env` 添加 API 密钥：
@@ -120,6 +120,10 @@ DEEPSEEK_API_KEY=your-api-key-here
 **运行完整管道**
 ```bash
 python scripts/main.py
+```
+**虚拟环境运行**
+```bash
+uv run scripts/main.py
 ```
 
 ‼️ATTENTION: 请使用英文字符搜索，暂时不支持中文字符搜索

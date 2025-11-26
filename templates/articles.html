@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>文章列表</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body>
+    <div class="container">
+      <h1>新闻数据展示</h1>
+
+      <form method="get" action="/articles" class="search-form">
+        <input type="text" name="q" placeholder="在标题、内容或来源中搜索..." value="{{ q | e }}" />
+        <button type="submit">搜索</button>
+        <a class="clear" href="/articles">清除</a>
+      </form>
+
+      <div class="meta">共显示 {{ articles|length }} 条记录</div>
+
+      <table class="articles-table">
+        <thead>
+          <tr>
+            {# helper to compute next direction inline #}
+            {%- set cols = ['id', 'title', 'source', 'published_date', 'scraped_at'] -%}
+            <th>
+              <a href="{{ url_for('articles_page', q=q, per_page=per_page, sort_by='id', sort_dir=('desc' if sort_by=='id' and sort_dir=='asc' else 'asc')) }}">ID
+                {% if sort_by == 'id' %}<span class="sort-arrow">{{ '▲' if sort_dir == 'asc' else '▼' }}</span>{% endif %}
+              </a>
+            </th>
+            <th>
+              <a href="{{ url_for('articles_page', q=q, per_page=per_page, sort_by='title', sort_dir=('desc' if sort_by=='title' and sort_dir=='asc' else 'asc')) }}">标题
+                {% if sort_by == 'title' %}<span class="sort-arrow">{{ '▲' if sort_dir == 'asc' else '▼' }}</span>{% endif %}
+              </a>
+            </th>
+            <th>
+              <a href="{{ url_for('articles_page', q=q, per_page=per_page, sort_by='source', sort_dir=('desc' if sort_by=='source' and sort_dir=='asc' else 'asc')) }}">来源
+                {% if sort_by == 'source' %}<span class="sort-arrow">{{ '▲' if sort_dir == 'asc' else '▼' }}</span>{% endif %}
+              </a>
+            </th>
+            <th>
+              <a href="{{ url_for('articles_page', q=q, per_page=per_page, sort_by='published_date', sort_dir=('desc' if sort_by=='published_date' and sort_dir=='asc' else 'asc')) }}">发布时间
+                {% if sort_by == 'published_date' %}<span class="sort-arrow">{{ '▲' if sort_dir == 'asc' else '▼' }}</span>{% endif %}
+              </a>
+            </th>
+            <th>
+              <a href="{{ url_for('articles_page', q=q, per_page=per_page, sort_by='scraped_at', sort_dir=('desc' if sort_by=='scraped_at' and sort_dir=='asc' else 'asc')) }}">抓取时间
+                {% if sort_by == 'scraped_at' %}<span class="sort-arrow">{{ '▲' if sort_dir == 'asc' else '▼' }}</span>{% endif %}
+              </a>
+            </th>
+            <th>URL</th>
+            <th>内容（预览）</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in articles %}
+          <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.title }}</td>
+            <td>{{ a.source }}</td>
+            <td>{{ a.published_date or '-' }}</td>
+            <td>{{ a.scraped_at or '-' }}</td>
+            <td><a href="{{ a.url }}" target="_blank">链接</a></td>
+            <td class="content-preview">{{ a.content[:250] }}{% if a.content and a.content|length > 250 %}…{% endif %}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="7">没有找到任何记录。</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="note">API: <code>/api/articles?q=搜索文本&amp;page=1&amp;per_page=25</code></div>
+
+      <div class="hint" style="font-size:13px;color:#666;margin-top:6px">提示：把鼠标移到表头右侧即可拖动列宽。</div>
+      {% if pagination %}
+      <nav class="pagination" aria-label="分页导航">
+        {% set p = pagination.page %}
+        {% set tp = pagination.total_pages %}
+        {% set pp = pagination.per_page %}
+
+        {% if p > 1 %}
+          <a class="page-link" href="{{ url_for('articles_page', q=q, page=p-1, per_page=pp, sort_by=sort_by, sort_dir=sort_dir) }}">« 上一页</a>
+        {% else %}
+          <span class="page-link disabled">« 上一页</span>
+        {% endif %}
+
+        {# show a reasonable window of page numbers around current page #}
+        {% set start = p - 3 if p - 3 > 0 else 1 %}
+        {% set end = p + 3 if p + 3 <= tp else tp %}
+        {% if start > 1 %}
+          <a class="page-number" href="{{ url_for('articles_page', q=q, page=1, per_page=pp, sort_by=sort_by, sort_dir=sort_dir) }}">1</a>
+          {% if start > 2 %}<span class="page-ellipsis">…</span>{% endif %}
+        {% endif %}
+
+        {% for pi in range(start, end+1) %}
+          {% if pi == p %}
+            <span class="page-number current">{{ pi }}</span>
+          {% else %}
+            <a class="page-number" href="{{ url_for('articles_page', q=q, page=pi, per_page=pp, sort_by=sort_by, sort_dir=sort_dir) }}">{{ pi }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if end < tp %}
+          {% if end < tp - 1 %}<span class="page-ellipsis">…</span>{% endif %}
+          <a class="page-number" href="{{ url_for('articles_page', q=q, page=tp, per_page=pp, sort_by=sort_by, sort_dir=sort_dir) }}">{{ tp }}</a>
+        {% endif %}
+
+        {% if p < tp %}
+          <a class="page-link" href="{{ url_for('articles_page', q=q, page=p+1, per_page=pp, sort_by=sort_by, sort_dir=sort_dir) }}">下一页 »</a>
+        {% else %}
+          <span class="page-link disabled">下一页 »</span>
+        {% endif %}
+
+        <span class="page-summary"> &nbsp; 第 {{ p }} / {{ tp }} 页 · 共 {{ pagination.total }} 条</span>
+      </nav>
+      {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='js/col_resize.js') }}"></script>
+  </body>
+</html>
